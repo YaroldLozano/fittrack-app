@@ -2,7 +2,8 @@
 
 Aplicación móvil de seguimiento de entrenamiento construida con **Ionic +
 Angular** (frontend, este repositorio) y una **API REST en PHP puro**
-(backend, repositorio hermano `fitness-api`), sobre MySQL.
+(backend: [fittrack-api](https://github.com/YaroldLozano/fittrack-api)),
+sobre MySQL.
 
 ## Objetivo de la aplicación
 
@@ -29,12 +30,12 @@ usuario (por ejemplo: *"hoy tengo 20 minutos y solo mancuernas"*).
 
 Son **dos repositorios separados** que se ejecutan juntos:
 
-- Este repo (`App/`): frontend Ionic/Angular.
-- [`fitness-api`](../fitness-api): backend PHP (repositorio propio, con su
-  propio README).
+- Este repo: frontend Ionic/Angular.
+- [fittrack-api](https://github.com/YaroldLozano/fittrack-api): backend PHP
+  (repositorio propio, con su propio README).
 
-**Backend** (requiere PHP + MySQL, p. ej. XAMPP) — ver detalle completo en
-`fitness-api/README.md`:
+**Backend** (requiere PHP + MySQL, p. ej. XAMPP) — ver detalle completo en el
+README de [fittrack-api](https://github.com/YaroldLozano/fittrack-api):
 1. Base de datos MySQL llamada `Yarold` con el esquema descrito en
    [`docs/modelo-datos.md`](docs/modelo-datos.md).
 2. `composer install` dentro de `fitness-api/`.
