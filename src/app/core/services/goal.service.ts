@@ -19,4 +19,8 @@ export class GoalService {
   update(id: number, data: Partial<Goal>): Observable<{ success: boolean; goal: Goal }> {
     return this.http.put<{ success: boolean; goal: Goal }>(`${environment.apiUrl}/goals/${id}`, data);
   }
+
+  delete(id: number): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${environment.apiUrl}/goals/${id}`);
+  }
 }

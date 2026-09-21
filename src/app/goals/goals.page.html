@@ -42,7 +42,10 @@
         <span *ngIf="goal.target_value">{{ goal.current_value }} / {{ goal.target_value }} {{ goal.unit }}</span>
       </div>
 
-      <button class="btn-secondary" *ngIf="goal.status !== 'completed'" (click)="markCompleted(goal)">Marcar como completado</button>
+      <div class="actions">
+        <button class="btn-secondary" *ngIf="goal.status !== 'completed'" (click)="markCompleted(goal)">Marcar como completado</button>
+        <button class="delete-btn" (click)="remove(goal)">Eliminar</button>
+      </div>
     </div>
 
     <p class="empty" *ngIf="goals.length === 0">No tienes objetivos todavía. ¡Crea el primero!</p>

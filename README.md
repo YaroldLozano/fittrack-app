@@ -70,10 +70,14 @@ Ver capturas de estas y otras vistas en [`screenshots/`](screenshots/).
 
 ## Modelo de datos
 
-Ver [`docs/modelo-datos.md`](docs/modelo-datos.md) — incluye diagrama
-entidad-relación (Mermaid) del núcleo de entrenamiento (usuarios, ejercicios,
-rutinas, sesiones, series, objetivos) y una tabla resumen de los módulos
-sociales/gamificación que comparten el mismo esquema.
+- [`docs/modelo-datos.md`](docs/modelo-datos.md) — modelo de la **base de
+  datos** (MySQL): diagrama entidad-relación del núcleo de entrenamiento
+  (usuarios, ejercicios, rutinas, sesiones, series, objetivos) y tabla
+  resumen de los módulos sociales/gamificación.
+- [`docs/capa-acceso-datos.md`](docs/capa-acceso-datos.md) — modelo del
+  **frontend**: las interfaces TypeScript de cada entidad, los servicios
+  Angular que implementan el acceso a datos (capa DAO sobre la API REST),
+  su cobertura de operaciones CRUD, y un diagrama de clases.
 
 ## Capturas de ejecución
 
@@ -93,7 +97,10 @@ verificar la vista móvil real de la app.
 
 ## Uso de IA en el desarrollo
 
-Ver [`docs/prompts-ia.md`](docs/prompts-ia.md) para la evidencia de prompts
-usados con IA (mínimo 3, con el detalle de qué se pidió en cada uno) y una
-explicación de qué código generado se aceptó, se modificó tras detectar un
-problema, o no aplicó por ya existir en el proyecto.
+- [`docs/prompts-ia.md`](docs/prompts-ia.md) — evidencia de prompts usados
+  con IA (mínimo 3, con el detalle de qué se pidió en cada uno) y una
+  explicación de qué código generado se aceptó, se modificó tras detectar un
+  problema, o no aplicó por ya existir en el proyecto.
+- [`docs/prompts-ia-modelado.md`](docs/prompts-ia-modelado.md) — mismo tipo
+  de explicación, específica para el modelado de entidades y la capa de
+  acceso a datos (servicios Angular).

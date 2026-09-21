@@ -99,4 +99,8 @@ export class GoalsPage implements OnInit {
   markCompleted(goal: Goal): void {
     this.goalService.update(goal.id, { status: 'completed' }).subscribe(withCd(this.cdr, () => this.loadGoals()));
   }
+
+  remove(goal: Goal): void {
+    this.goalService.delete(goal.id).subscribe(withCd(this.cdr, () => this.loadGoals()));
+  }
 }
