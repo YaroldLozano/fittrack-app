@@ -1,7 +1,8 @@
 # FitTrack
 
 Aplicación móvil de seguimiento de entrenamiento construida con **Ionic +
-Angular** (frontend) y una **API REST en PHP puro** (backend), sobre MySQL.
+Angular** (frontend, este repositorio) y una **API REST en PHP puro**
+(backend, repositorio hermano `fitness-api`), sobre MySQL.
 
 ## Objetivo de la aplicación
 
@@ -26,13 +27,21 @@ usuario (por ejemplo: *"hoy tengo 20 minutos y solo mancuernas"*).
 
 ## Cómo ejecutarlo
 
-**Backend** (requiere PHP + MySQL, p. ej. XAMPP):
+Son **dos repositorios separados** que se ejecutan juntos:
+
+- Este repo (`App/`): frontend Ionic/Angular.
+- [`fitness-api`](../fitness-api): backend PHP (repositorio propio, con su
+  propio README).
+
+**Backend** (requiere PHP + MySQL, p. ej. XAMPP) — ver detalle completo en
+`fitness-api/README.md`:
 1. Base de datos MySQL llamada `Yarold` con el esquema descrito en
    [`docs/modelo-datos.md`](docs/modelo-datos.md).
-2. Copiar `fitness-api/.env.example` a `.env` y completar credenciales de BD
+2. `composer install` dentro de `fitness-api/`.
+3. Copiar `fitness-api/.env.example` a `.env` y completar credenciales de BD
    y `JWT_SECRET`. Para la herramienta de IA, agregar `ANTHROPIC_API_KEY`
    (se obtiene en console.anthropic.com).
-3. Servir la carpeta `fitness-api/` con Apache (XAMPP) en
+4. Servir la carpeta `fitness-api/` con Apache (XAMPP) en
    `http://localhost/fitness-api`.
 
 **Frontend:**
