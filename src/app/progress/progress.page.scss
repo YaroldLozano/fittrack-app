@@ -1,0 +1,48 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  padding: 8px 20px;
+}
+
+.card.stat {
+  background: var(--ft-surface);
+  border-radius: var(--ft-radius-md);
+  padding: 14px 16px;
+  color: var(--ft-text);
+  border: 1px solid var(--ft-border);
+
+  .card-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  h2 {
+    margin: 4px 0 0;
+    font: var(--ft-text-stat);
+  }
+}
+
+.exercise-picker {
+  padding: 16px 20px 4px;
+
+  select {
+    width: 100%;
+    background: var(--ft-surface);
+    border: 1px solid var(--ft-border-strong);
+    border-radius: var(--ft-radius-sm);
+    padding: 10px 12px;
+    color: var(--ft-text);
+  }
+}
+
+.chart-card {
+  background: var(--ft-surface);
+  border-radius: var(--ft-radius-lg);
+  margin: 16px 20px 32px;
+  padding: 16px;
+  height: 280px;
+  border: 1px solid var(--ft-border);
+}

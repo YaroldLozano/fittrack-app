@@ -1,0 +1,133 @@
+.filter-row input {
+  width: 100%;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border-strong);
+  border-radius: var(--ft-radius-sm);
+  padding: 10px 14px;
+  color: var(--ft-text);
+  font-size: 0.9em;
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--ft-text-muted);
+  }
+}
+
+.conversation-list {
+  padding: var(--ft-space-2) 0 32px;
+}
+
+.conversation-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-3);
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background var(--ft-transition-fast);
+  border-bottom: 1px solid var(--ft-border);
+
+  &:hover {
+    background: var(--ft-surface);
+  }
+
+  .avatar-initials.muted {
+    background: var(--ft-surface-elevated);
+    color: var(--ft-text-muted);
+  }
+}
+
+.conversation-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.conversation-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.conversation-name {
+  font-weight: 600;
+  color: var(--ft-text);
+  font-size: 0.95em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-time {
+  flex-shrink: 0;
+  font-size: 0.75em;
+  color: var(--ft-text-muted);
+}
+
+.conversation-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.conversation-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85em;
+  color: var(--ft-text-secondary);
+
+  &.empty-preview {
+    font-style: italic;
+    color: var(--ft-text-muted);
+  }
+}
+
+.unread-badge {
+  flex-shrink: 0;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--ft-radius-pill);
+  background: var(--ft-notify);
+  color: var(--ft-notify-contrast);
+  font-size: 0.72em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 60px 32px;
+  color: var(--ft-text-secondary);
+
+  ion-icon {
+    font-size: 2.6em;
+    color: var(--ft-text-muted);
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .hint {
+    color: var(--ft-text-muted);
+    font-size: 0.85em;
+    max-width: 280px;
+  }
+
+  .btn-primary {
+    margin-top: 14px;
+    text-decoration: none;
+  }
+}

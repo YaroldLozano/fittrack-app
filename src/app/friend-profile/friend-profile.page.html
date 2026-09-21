@@ -1,0 +1,67 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1 *ngIf="profile">{{ profile.badge }} {{ profile.username }}</h1>
+  </div>
+
+  <ng-container *ngIf="profile">
+    <div class="rank-hero">
+      <div class="profile-hero-top">
+        <app-avatar [mediaId]="profile.avatar_media_id" [username]="profile.username" size="lg"></app-avatar>
+        <div>
+          <div class="rank-hero-top">
+            <span class="rank-position">{{ profile.level_name | uppercase }}</span>
+            <span class="rank-badge" *ngIf="profile.relation === 'friends'">✓ Amigos</span>
+          </div>
+          <div class="rank-xp">{{ profile.xp_total | number }} XP</div>
+        </div>
+      </div>
+      <p class="bio-text" *ngIf="profile.bio">{{ profile.bio }}</p>
+      <p class="rank-next">🔥 {{ profile.current_streak_days }} días · 🏋️ {{ profile.workouts_completed }} entrenamientos · 🏆 {{ profile.personal_records }} PR</p>
+    </div>
+
+    <span class="card-label" style="padding: 0 20px">Mejores ejercicios</span>
+    <div class="card-list">
+      <div class="item-card" *ngFor="let ex of profile.top_exercises">
+        <div class="item-card-header">
+          <h3>{{ ex.exercise_name }}</h3>
+          <span class="tag">{{ ex.badge }} {{ ex.level_name }}</span>
+        </div>
+      </div>
+      <p class="empty" *ngIf="profile.top_exercises.length === 0">Aún no tiene progreso registrado</p>
+    </div>
+
+    <span class="card-label" style="padding: 0 20px">Publicaciones</span>
+    <div class="posts-grid">
+      <div class="posts-grid-item" *ngFor="let p of posts" (click)="openPost(p.id)">
+        <img *ngIf="p.media[0]?.type === 'image'" [secureSrc]="p.media[0].id" [thumb]="true" alt="" />
+        <video *ngIf="p.media[0]?.type === 'video'" [secureSrc]="p.media[0].id" muted></video>
+        <div class="posts-grid-text" *ngIf="p.media.length === 0">{{ p.caption }}</div>
+      </div>
+    </div>
+    <p class="empty" *ngIf="posts.length === 0">Sin publicaciones visibles</p>
+
+    <div class="filter-row">
+      <button class="btn-primary" (click)="toggleCompare()">{{ showComparison ? 'Ocultar' : 'Comparar' }}</button>
+      <button class="btn-secondary" *ngIf="profile.relation === 'friends'" (click)="openChat()" [disabled]="isOpeningChat">
+        Mensaje
+      </button>
+      <button class="btn-secondary" (click)="goToGroupWorkouts()">Entrenar juntos</button>
+      <button class="btn-secondary" (click)="goToChallenges()">Crear reto</button>
+    </div>
+
+    <ng-container *ngIf="showComparison && comparison">
+      <div class="rank-hero">
+        <p class="rank-next">{{ comparison.summary }}</p>
+      </div>
+      <div class="card-list">
+        <div class="item-card" *ngFor="let ex of comparison.exercises">
+          <div class="item-card-header">
+            <h3>{{ ex.exercise_name }}</h3>
+          </div>
+          <p class="equipment">Tú: {{ ex.viewer_weight }} kg · {{ profile.username }}: {{ ex.target_weight }} kg</p>
+        </div>
+        <p class="empty" *ngIf="comparison.exercises.length === 0">Todavía no hay ejercicios en común para comparar</p>
+      </div>
+    </ng-container>
+  </ng-container>
+</ion-content>

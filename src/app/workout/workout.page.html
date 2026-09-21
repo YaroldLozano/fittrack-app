@@ -1,0 +1,94 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Entrenamiento</h1>
+    <button class="btn-secondary" *ngIf="session" (click)="backToList()">← Volver</button>
+  </div>
+
+  <!-- Picker: no active session -->
+  <ng-container *ngIf="!session">
+    <div class="quick-links">
+      <a routerLink="/app/routines">📋 Rutinas</a>
+      <a routerLink="/app/exercises">💪 Ejercicios</a>
+      <a routerLink="/app/calendar">📅 Calendario</a>
+      <a routerLink="/app/history">🕓 Historial</a>
+      <a routerLink="/app/ai-coach">🤖 Ajustar con IA</a>
+    </div>
+
+    <div class="card-list">
+      <div class="item-card" *ngFor="let w of todaysWorkouts" (click)="openSession(w)">
+        <div class="item-card-header">
+          <h3>{{ w.name }}</h3>
+          <span class="status-badge" [ngClass]="w.status">{{ w.status }}</span>
+        </div>
+        <p class="equipment">{{ w.scheduled_date }}</p>
+      </div>
+
+      <p class="empty" *ngIf="!isLoading && todaysWorkouts.length === 0">
+        No tienes entrenamientos programados para hoy.
+      </p>
+    </div>
+
+    <div class="quick-start">
+      <button class="btn-primary" [disabled]="isCreating" (click)="createQuickWorkout()">
+        {{ isCreating ? 'Creando...' : '+ Entrenamiento libre de hoy' }}
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Active session -->
+  <ng-container *ngIf="session">
+    <div class="session-header">
+      <h2>{{ session.name }}</h2>
+      <span class="status-badge" [ngClass]="session.status">{{ session.status }}</span>
+      <span class="duration" *ngIf="session.duration_seconds">{{ formatDuration(session.duration_seconds) }}</span>
+    </div>
+
+    <div class="session-actions">
+      <button class="btn-primary" *ngIf="session.status === 'scheduled'" (click)="start()">Comenzar entrenamiento</button>
+      <button class="btn-primary" *ngIf="session.status === 'in_progress'" (click)="complete()">Finalizar entrenamiento</button>
+    </div>
+
+    <div class="exercise-log" *ngFor="let ex of session.exercises">
+      <div class="exercise-log-header">
+        <h3>{{ ex.exercise_name }}</h3>
+        <span class="tag" *ngIf="ex.planned_sets">Plan: {{ ex.planned_sets }}×{{ ex.planned_reps }} @ {{ ex.planned_weight }}kg</span>
+      </div>
+
+      <table class="sets-table" *ngIf="ex.sets.length > 0">
+        <tr *ngFor="let set of ex.sets">
+          <td>Serie {{ set.set_number }}</td>
+          <td>{{ set.reps }} reps</td>
+          <td>{{ set.weight }} kg</td>
+          <td><span class="pr-badge" *ngIf="set.is_personal_record">🏆 PR</span></td>
+        </tr>
+      </table>
+
+      <div class="set-input-row" *ngIf="session.status === 'in_progress'">
+        <input type="number" [(ngModel)]="draftFor(ex.exercise_id).reps" placeholder="Reps" />
+        <input type="number" [(ngModel)]="draftFor(ex.exercise_id).weight" placeholder="Peso (kg)" />
+        <button class="btn-secondary" (click)="logSet(ex.exercise_id)">+ Serie</button>
+      </div>
+    </div>
+
+    <div class="exercise-log" *ngFor="let ex of pendingExercises()">
+      <div class="exercise-log-header">
+        <h3>{{ ex.name }}</h3>
+        <span class="tag">Sin series registradas</span>
+      </div>
+
+      <div class="set-input-row" *ngIf="session.status === 'in_progress'">
+        <input type="number" [(ngModel)]="draftFor(ex.id).reps" placeholder="Reps" />
+        <input type="number" [(ngModel)]="draftFor(ex.id).weight" placeholder="Peso (kg)" />
+        <button class="btn-secondary" (click)="logSet(ex.id)">+ Serie</button>
+      </div>
+    </div>
+
+    <div class="add-exercise-row" *ngIf="session.status === 'in_progress'">
+      <select [(ngModel)]="newExerciseId">
+        <option [ngValue]="null" disabled>Agregar ejercicio...</option>
+        <option *ngFor="let ex of availableExercises()" [ngValue]="ex.id">{{ ex.name }}</option>
+      </select>
+      <button class="btn-secondary" (click)="addExerciseToSession()">Agregar</button>
+    </div>
+  </ng-container>
+</ion-content>

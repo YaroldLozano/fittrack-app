@@ -1,0 +1,40 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Mensajes</h1>
+  </div>
+
+  <div class="filter-row" *ngIf="conversations.length > 3">
+    <input type="text" [(ngModel)]="query" placeholder="Buscar conversación..." />
+  </div>
+
+  <div class="conversation-list">
+    <div class="conversation-item" *ngFor="let c of filtered" (click)="openConversation(c.id)">
+      <app-avatar [mediaId]="c.friend.avatar_media_id" [username]="c.friend.username"></app-avatar>
+      <div class="conversation-body">
+        <div class="conversation-top">
+          <span class="conversation-name">{{ c.friend.username }}</span>
+          <span class="conversation-time">{{ formatTimestamp(c.updated_at) }}</span>
+        </div>
+        <div class="conversation-bottom">
+          <span class="conversation-preview" *ngIf="c.last_message">{{ c.last_message.message }}</span>
+          <span class="conversation-preview empty-preview" *ngIf="!c.last_message">Inicia la conversación</span>
+          <span class="unread-badge" *ngIf="c.unread_count > 0">{{ c.unread_count }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && conversations.length === 0 && hasFriends">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+      <p>Aún no tienes conversaciones.</p>
+      <p class="hint">Agrega amigos y comienza una conversación.</p>
+      <a class="btn-primary" routerLink="/app/friends">Ver amigos</a>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && conversations.length === 0 && !hasFriends">
+      <ion-icon name="people-outline"></ion-icon>
+      <p>Aún no tienes amigos.</p>
+      <p class="hint">Agrega personas para poder comparar tu progreso, retarte y conversar.</p>
+      <a class="btn-primary" routerLink="/app/friends">Buscar amigos</a>
+    </div>
+  </div>
+</ion-content>

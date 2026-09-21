@@ -1,0 +1,39 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Historial</h1>
+  </div>
+
+  <div class="card-list" *ngIf="!selected">
+    <div class="item-card" *ngFor="let w of completedWorkouts" (click)="open(w)">
+      <div class="item-card-header">
+        <h3>{{ w.name }}</h3>
+      </div>
+      <p class="equipment">{{ w.scheduled_date }}</p>
+      <div class="history-stats">
+        <span>⏱ {{ formatDuration(w.duration_seconds) }}</span>
+        <span>🏋️ {{ w.exercise_count }} ejercicios</span>
+        <span>📊 {{ totalSets(w) }} series</span>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="completedWorkouts.length === 0">Todavía no has completado ningún entrenamiento.</p>
+  </div>
+
+  <div class="detail" *ngIf="selected">
+    <button class="btn-secondary" (click)="close()">← Volver</button>
+    <h2>{{ selected.name }}</h2>
+    <p class="equipment">{{ selected.scheduled_date }} · {{ formatDuration(selected.duration_seconds) }}</p>
+
+    <div class="exercise-block" *ngFor="let ex of selected.exercises">
+      <h3>{{ ex.exercise_name }}</h3>
+      <table class="sets-table">
+        <tr *ngFor="let set of ex.sets">
+          <td>Serie {{ set.set_number }}</td>
+          <td>{{ set.reps }} reps</td>
+          <td>{{ set.weight }} kg</td>
+          <td><span class="pr-badge" *ngIf="set.is_personal_record">🏆</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</ion-content>

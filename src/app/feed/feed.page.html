@@ -1,0 +1,73 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Feed</h1>
+    <a class="btn-secondary" routerLink="/app/notifications">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </a>
+  </div>
+
+  <div class="stories-row">
+    <div class="story-item" (click)="myStoryGroup ? openStories(myUserId!) : createStory()">
+      <div class="story-ring" [class.has-story]="myStoryGroup" [class.unseen]="myStoryGroup?.has_unseen">
+        <app-avatar [mediaId]="myStoryGroup?.author?.avatar_media_id ?? null" [username]="'Tú'" size="lg"></app-avatar>
+        <span class="story-add" *ngIf="!myStoryGroup">+</span>
+      </div>
+      <span class="story-label">Tu historia</span>
+    </div>
+
+    <div class="story-item" *ngFor="let g of friendStoryGroups" (click)="openStories(g.author.id)">
+      <div class="story-ring has-story" [class.unseen]="g.has_unseen">
+        <app-avatar [mediaId]="g.author.avatar_media_id" [username]="g.author.username" size="lg"></app-avatar>
+      </div>
+      <span class="story-label">{{ g.author.username }}</span>
+    </div>
+  </div>
+
+  <div class="create-post-row">
+    <app-avatar [mediaId]="myStoryGroup?.author?.avatar_media_id ?? null" [username]="'Tú'"></app-avatar>
+    <button class="create-post-input" (click)="createPost()">¿Qué estás entrenando hoy?</button>
+  </div>
+
+  <div class="skeleton" *ngIf="isLoading">Cargando feed…</div>
+
+  <div class="post-list" *ngIf="!isLoading">
+    <article class="post-card" *ngFor="let post of posts">
+      <div class="post-header" (click)="openAuthor(post.author.id)">
+        <app-avatar [mediaId]="post.author.avatar_media_id" [username]="post.author.username"></app-avatar>
+        <div class="post-header-info">
+          <span class="post-author-name">{{ post.author.username }}</span>
+          <span class="post-time">{{ post.created_at | date: 'medium' }}</span>
+        </div>
+      </div>
+
+      <p class="post-caption" *ngIf="post.caption">{{ post.caption }}</p>
+
+      <div class="post-media" *ngIf="post.media.length > 0" (click)="openPost(post.id)">
+        <img *ngIf="post.media[0].type === 'image'" [secureSrc]="post.media[0].id" alt="" />
+        <video *ngIf="post.media[0].type === 'video'" [secureSrc]="post.media[0].id" controls preload="metadata"></video>
+      </div>
+
+      <div class="post-actions">
+        <button class="post-action" [class.liked]="post.liked_by_me" (click)="toggleLike(post)">
+          <ion-icon [name]="post.liked_by_me ? 'heart' : 'heart-outline'"></ion-icon>
+          {{ post.like_count }}
+        </button>
+        <button class="post-action" (click)="openPost(post.id)">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          {{ post.comment_count }}
+        </button>
+      </div>
+    </article>
+
+    <p class="empty" *ngIf="posts.length === 0">
+      Tu feed está vacío.<br />Agrega amigos y comparte tus entrenamientos para comenzar a ver actividad.
+      <br /><a class="btn-primary" routerLink="/app/friends">Buscar amigos</a>
+    </p>
+
+    <div class="load-more-row" *ngIf="hasMore">
+      <button class="btn-secondary" (click)="loadMore()" [disabled]="isLoadingMore">
+        {{ isLoadingMore ? 'Cargando…' : 'Cargar más' }}
+      </button>
+    </div>
+  </div>
+</ion-content>

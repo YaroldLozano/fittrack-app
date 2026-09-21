@@ -1,0 +1,94 @@
+<ion-content class="dash">
+  <div class="dash-header">
+    <h1>Hola{{ username ? ', ' + username : '' }} 👋</h1>
+    <p>¿Qué tienes que hacer hoy?</p>
+  </div>
+
+  <div class="skeleton" *ngIf="isLoading">Cargando dashboard...</div>
+
+  <div class="hero" *ngIf="!isLoading && me">
+    <div class="hero-stats">
+      <span class="hero-badge">{{ me.badge }} {{ me.level_name }}</span>
+      <span class="hero-xp">{{ me.xp_total | number }} XP</span>
+      <span class="hero-streak" *ngIf="me.current_streak_days > 0">🔥 {{ me.current_streak_days }} días</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn-primary hero-cta" [routerLink]="['/app/workout']" [queryParams]="todayWorkout ? { id: todayWorkout.id } : {}">
+        Empezar entrenamiento
+      </a>
+      <a class="btn-secondary hero-cta" routerLink="/app/ai-coach">🤖 Ajustar con IA</a>
+    </div>
+  </div>
+
+  <div class="grid" *ngIf="!isLoading">
+    <div class="card highlight" *ngIf="todayWorkout">
+      <span class="card-label">Entrenamiento de hoy</span>
+      <h3>{{ todayWorkout.name }}</h3>
+      <a class="card-cta" [routerLink]="['/app/workout']" [queryParams]="{ id: todayWorkout.id }">Comenzar →</a>
+    </div>
+    <div class="card" *ngIf="!todayWorkout">
+      <span class="card-label">Entrenamiento de hoy</span>
+      <h3 class="muted">Sin entrenamiento programado</h3>
+      <a class="card-cta" routerLink="/app/calendar">Programar uno →</a>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Rutina actual</span>
+      <h3 *ngIf="activeRoutine">{{ activeRoutine.name }}</h3>
+      <h3 class="muted" *ngIf="!activeRoutine">Sin rutina activa</h3>
+      <a class="card-cta" routerLink="/app/routines">Ver rutinas →</a>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Próximo entrenamiento</span>
+      <h3 *ngIf="nextWorkout">{{ nextWorkout.name }}</h3>
+      <span class="sub" *ngIf="nextWorkout">{{ nextWorkout.scheduled_date }}</span>
+      <h3 class="muted" *ngIf="!nextWorkout">No hay nada programado</h3>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Peso corporal actual</span>
+      <h3 *ngIf="currentWeight !== null">{{ currentWeight }} kg</h3>
+      <h3 class="muted" *ngIf="currentWeight === null">Sin registros</h3>
+      <span class="sub" [class.up]="weightTrend! > 0" [class.down]="weightTrend! < 0" *ngIf="weightTrend !== null">
+        {{ weightTrend! > 0 ? '+' : '' }}{{ weightTrend }} kg desde el último registro
+      </span>
+    </div>
+
+    <div class="card stat" *ngIf="progress">
+      <span class="card-label">Entrenamientos completados</span>
+      <h2>{{ progress.total_workouts_completed }}</h2>
+    </div>
+
+    <div class="card stat" *ngIf="progress">
+      <span class="card-label">Esta semana</span>
+      <h2>{{ progress.workouts_this_week }}</h2>
+    </div>
+
+    <div class="card stat" *ngIf="progress">
+      <span class="card-label">Este mes</span>
+      <h2>{{ progress.workouts_this_month }}</h2>
+    </div>
+
+    <div class="card stat" *ngIf="progress">
+      <span class="card-label">Volumen total levantado</span>
+      <h2>{{ progress.total_volume | number: '1.0-0' }} kg</h2>
+    </div>
+
+    <div class="card wide" *ngIf="recentWorkout">
+      <span class="card-label">Ejercicios recientes</span>
+      <ul class="pill-list">
+        <li *ngFor="let ex of recentWorkout.exercises">{{ ex.exercise_name }}</li>
+      </ul>
+    </div>
+
+    <div class="card wide" *ngIf="personalRecords.length > 0">
+      <span class="card-label">Récords personales recientes 🏆</span>
+      <ul class="pr-list">
+        <li *ngFor="let pr of personalRecords">
+          <strong>{{ pr.exercise_name }}</strong> — {{ pr.weight }} kg × {{ pr.reps }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,58 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>🤖 Ajustar con IA</h1>
+  </div>
+
+  <div class="ai-intro">
+    <p>Cuéntale a la IA qué quieres hacer hoy y te propondrá un entrenamiento a partir de tu catálogo de ejercicios.</p>
+  </div>
+
+  <div class="quick-prompts">
+    <button
+      type="button"
+      class="btn-secondary"
+      *ngFor="let qp of quickPrompts"
+      (click)="useQuickPrompt(qp)"
+    >
+      {{ qp }}
+    </button>
+  </div>
+
+  <form class="ai-form" (ngSubmit)="ask()">
+    <textarea
+      [(ngModel)]="prompt"
+      name="prompt"
+      rows="3"
+      placeholder="Ej. Hoy tengo poco tiempo y solo mancuernas, dame algo rápido de tren superior..."
+    ></textarea>
+    <button type="submit" class="btn-primary" [disabled]="isAsking || !prompt.trim()">
+      {{ isAsking ? 'Pensando...' : 'Ajustar mi entrenamiento' }}
+    </button>
+  </form>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="suggestion-card" *ngIf="suggestion">
+    <div class="suggestion-header">
+      <h3>{{ suggestion.name }}</h3>
+      <button type="button" class="delete-btn" (click)="discard()">✕</button>
+    </div>
+    <p class="suggestion-note" *ngIf="suggestion.note">{{ suggestion.note }}</p>
+
+    <div class="suggestion-exercises">
+      <div class="suggestion-exercise" *ngFor="let ex of suggestion.exercises">
+        <span class="ex-name">{{ ex.exercise_name }}</span>
+        <span class="ex-detail">
+          {{ ex.sets }}×{{ ex.reps }}{{ ex.target_weight ? ' · ' + ex.target_weight + 'kg' : '' }} · {{ ex.rest_seconds }}s descanso
+        </span>
+      </div>
+    </div>
+
+    <div class="suggestion-actions">
+      <button type="button" class="btn-primary" [disabled]="isApplying" (click)="apply()">
+        {{ isApplying ? 'Creando...' : 'Usar este entrenamiento' }}
+      </button>
+      <button type="button" class="btn-secondary" [disabled]="isApplying" (click)="discard()">Descartar</button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>🏅 Mis Logros</h1>
+  </div>
+
+  <span class="card-label" style="padding: 0 20px">Desbloqueados ({{ unlocked.length }})</span>
+  <div class="exercise-grid">
+    <div class="exercise-card unlocked" *ngFor="let a of unlocked">
+      <span class="custom-badge rarity" [ngClass]="a.rarity">{{ a.rarity }}</span>
+      <h3>{{ a.icon }} {{ a.name }}</h3>
+      <p class="equipment">{{ a.description }}</p>
+      <p class="tag">Desbloqueado {{ a.unlocked_at | date: 'd MMM y' }}</p>
+    </div>
+  </div>
+  <p class="empty" *ngIf="!isLoading && unlocked.length === 0">Aún no has desbloqueado logros. ¡Sigue entrenando!</p>
+
+  <span class="card-label" style="padding: 16px 20px 0">Bloqueados</span>
+  <div class="exercise-grid">
+    <div class="exercise-card locked" *ngFor="let a of locked">
+      <span class="custom-badge rarity" [ngClass]="a.rarity">{{ a.rarity }}</span>
+      <h3>🔒 {{ a.name }}</h3>
+      <p class="equipment">{{ a.description }}</p>
+      <div class="progress-bar-track" *ngIf="a.current_value !== null && a.current_value !== undefined">
+        <div class="progress-bar-fill" [style.width.%]="(a.current_value! / a.requirement_value * 100) < 100 ? (a.current_value! / a.requirement_value * 100) : 100"></div>
+      </div>
+      <p class="tag" *ngIf="a.current_value !== null && a.current_value !== undefined">
+        {{ a.current_value }} / {{ a.requirement_value }}
+      </p>
+    </div>
+  </div>
+</ion-content>

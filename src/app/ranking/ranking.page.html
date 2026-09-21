@@ -1,0 +1,153 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>🏆 Ranking</h1>
+  </div>
+
+  <div class="quick-links">
+    <a routerLink="/app/friends">👥 Amigos</a>
+    <a routerLink="/app/achievements">🏅 Logros</a>
+    <a routerLink="/app/challenges">⚔️ Retos</a>
+    <a routerLink="/app/group-workouts">🤝 Entrenar juntos</a>
+  </div>
+
+  <div class="ranking-tabs">
+    <button [class.active]="tab === 'resumen'" (click)="setTab('resumen')">Resumen</button>
+    <button [class.active]="tab === 'amigos'" (click)="setTab('amigos')">Amigos</button>
+    <button [class.active]="tab === 'global'" (click)="setTab('global')">Global</button>
+    <button [class.active]="tab === 'semanal'" (click)="setTab('semanal')">Semanal</button>
+    <button [class.active]="tab === 'temporada'" (click)="setTab('temporada')">Temporada</button>
+    <button [class.active]="tab === 'ejercicio'" (click)="setTab('ejercicio')">Por ejercicio</button>
+  </div>
+
+  <ng-container *ngIf="tab === 'resumen'">
+    <div class="rank-hero" *ngIf="me">
+      <div class="rank-hero-top">
+        <span class="rank-position">RANK #{{ me.rank_by_xp }}</span>
+        <span class="rank-badge">{{ me.badge }} {{ me.level_name | uppercase }}</span>
+      </div>
+      <div class="rank-xp">{{ me.xp_total | number }} XP</div>
+      <div class="progress-bar-track" *ngIf="me.xp_to_next_level !== null">
+        <div class="progress-bar-fill" [style.width.%]="100 - (me.xp_to_next_level! / (me.xp_total + me.xp_to_next_level!) * 100)"></div>
+      </div>
+      <p class="rank-next" *ngIf="me.xp_to_next_level !== null">
+        {{ me.xp_to_next_level | number }} XP para {{ me.next_level_name }}
+      </p>
+      <p class="rank-next" *ngIf="me.xp_to_next_level === null">Nivel máximo alcanzado 🏆</p>
+      <p class="rank-streak" *ngIf="me.current_streak_days > 0">🔥 {{ me.current_streak_days }} días de racha</p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="card-label">Retos activos</span>
+        <p class="empty" *ngIf="activeChallenges.length === 0">Sin retos activos</p>
+        <div class="mini-list" *ngFor="let c of activeChallenges">
+          <span>{{ c.title }}</span>
+          <span class="tag">{{ c.status }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="card-label">Logros recientes</span>
+        <p class="empty" *ngIf="recentAchievements.length === 0">Aún no tienes logros</p>
+        <div class="mini-list" *ngFor="let a of recentAchievements">
+          <span>{{ a.icon }} {{ a.name }}</span>
+          <span class="tag rarity" [ngClass]="a.rarity">{{ a.rarity }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="card-label">Próximos desbloqueos</span>
+        <p class="empty" *ngIf="nextUnlocks.length === 0">Sigue entrenando para ver progreso aquí</p>
+        <div class="mini-list" *ngFor="let a of nextUnlocks">
+          <span>{{ a.icon }} {{ a.name }}</span>
+          <span class="tag">{{ a.current_value }} / {{ a.requirement_value }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'amigos'">
+    <div class="card-list rank-list">
+      <div class="item-card rank-row" *ngFor="let e of friendsEntries" [class.is-me]="e.is_me">
+        <span class="rank-num">#{{ e.rank }}</span>
+        <app-avatar [mediaId]="e.avatar_media_id ?? null" [username]="e.username" size="sm"></app-avatar>
+        <span class="rank-name">{{ e.badge }} {{ e.username }}</span>
+        <span class="rank-xp-value">{{ e.xp_total | number }} XP</span>
+      </div>
+      <p class="empty" *ngIf="friendsEntries.length === 0">👥 Aún no tienes amigos. Agrega personas para comenzar a competir.</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'global'">
+    <div class="filter-row">
+      <button class="btn-secondary" [class.active]="globalMode === 'nearby'" (click)="setGlobalMode('nearby')">Cerca de mí</button>
+      <button class="btn-secondary" [class.active]="globalMode === 'page'" (click)="setGlobalMode('page')">Explorar</button>
+    </div>
+    <div class="card-list rank-list">
+      <div class="item-card rank-row" *ngFor="let e of globalEntries" [class.is-me]="e.is_me">
+        <span class="rank-num">#{{ e.rank }}</span>
+        <app-avatar [mediaId]="e.avatar_media_id ?? null" [username]="e.username" size="sm"></app-avatar>
+        <span class="rank-name">{{ e.badge }} {{ e.username }}</span>
+        <span class="rank-change" *ngIf="e.rank_change !== null && e.rank_change !== undefined">
+          <span *ngIf="e.rank_change! > 0" class="up">↑ {{ e.rank_change }}</span>
+          <span *ngIf="e.rank_change! < 0" class="down">↓ {{ -e.rank_change! }}</span>
+        </span>
+        <span class="rank-xp-value">{{ e.xp_total | number }} XP</span>
+      </div>
+    </div>
+    <div class="filter-row" *ngIf="globalMode === 'page'">
+      <button class="btn-secondary" (click)="prevGlobalPage()" [disabled]="globalPageNum === 1">← Anterior</button>
+      <span>Página {{ globalPageNum }} de {{ globalTotal > 0 ? (globalTotal / 20 | number: '1.0-0') : 1 }}</span>
+      <button class="btn-secondary" (click)="nextGlobalPage()">Siguiente →</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'semanal'">
+    <div class="filter-row">
+      <button class="btn-secondary" [class.active]="weeklyScope === 'global'" (click)="setWeeklyScope('global')">Global</button>
+      <button class="btn-secondary" [class.active]="weeklyScope === 'friends'" (click)="setWeeklyScope('friends')">Amigos</button>
+    </div>
+    <p class="rank-next">Termina en: {{ formatDuration(weeklySecondsRemaining) }}</p>
+    <div class="card-list rank-list">
+      <div class="item-card rank-row" *ngFor="let e of weeklyEntries" [class.is-me]="e.is_me">
+        <span class="rank-num">#{{ e.rank }}</span>
+        <span class="rank-name">{{ e.username }}</span>
+        <span class="rank-xp-value">{{ e.xp_period | number }} XP</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'temporada'">
+    <div class="filter-row">
+      <button class="btn-secondary" [class.active]="seasonScope === 'global'" (click)="setSeasonScope('global')">Global</button>
+      <button class="btn-secondary" [class.active]="seasonScope === 'friends'" (click)="setSeasonScope('friends')">Amigos</button>
+    </div>
+    <p class="rank-next">{{ seasonName }}</p>
+    <div class="card-list rank-list">
+      <div class="item-card rank-row" *ngFor="let e of seasonEntries" [class.is-me]="e.is_me">
+        <span class="rank-num">#{{ e.rank }}</span>
+        <span class="rank-name">{{ e.username }}</span>
+        <span class="rank-xp-value">{{ e.xp_period | number }} XP</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'ejercicio'">
+    <div class="filter-row">
+      <select [(ngModel)]="selectedExerciseId" (ngModelChange)="onExerciseSelected()">
+        <option [ngValue]="null" disabled>Selecciona un ejercicio...</option>
+        <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
+      </select>
+      <button class="btn-secondary" [class.active]="exerciseScope === 'global'" (click)="setExerciseScope('global')">Global</button>
+      <button class="btn-secondary" [class.active]="exerciseScope === 'friends'" (click)="setExerciseScope('friends')">Amigos</button>
+    </div>
+    <div class="card-list rank-list">
+      <div class="item-card rank-row" *ngFor="let e of exerciseEntries; let i = index" [class.is-me]="e.is_me">
+        <span class="rank-num">#{{ i + 1 }}</span>
+        <span class="rank-name">{{ e.username }}</span>
+        <span class="rank-xp-value">{{ e.best_weight }} kg</span>
+      </div>
+      <p class="empty" *ngIf="selectedExerciseId && exerciseEntries.length === 0">Nadie ha registrado este ejercicio todavía</p>
+    </div>
+  </ng-container>
+</ion-content>

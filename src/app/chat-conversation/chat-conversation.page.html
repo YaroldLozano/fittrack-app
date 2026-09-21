@@ -1,0 +1,76 @@
+<ion-header class="chat-header">
+  <button class="back-btn" (click)="goBack()" aria-label="Volver a mensajes">
+    <ion-icon name="chevron-back"></ion-icon>
+  </button>
+  <div class="chat-header-user" *ngIf="conversation" (click)="onFriendProfile()">
+    <app-avatar [mediaId]="conversation.friend.avatar_media_id" [username]="conversation.friend.username" size="sm"></app-avatar>
+    <div class="chat-header-info">
+      <span class="chat-header-name">{{ conversation.friend.username }}</span>
+      <span class="chat-header-sub">{{ conversation.friend.badge }} {{ conversation.friend.level_name }}</span>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content #content [scrollEvents]="true" (ionScroll)="onScroll()">
+  <div class="load-more-row" *ngIf="isLoadingMore">
+    <span>Cargando mensajes anteriores…</span>
+  </div>
+
+  <div class="messages-list" *ngIf="!isLoading">
+    <div
+      class="message-row"
+      *ngFor="let m of messages"
+      [class.mine]="isMine(m)"
+    >
+      <div class="message-bubble">
+        <p class="message-text">{{ m.message }}</p>
+        <span class="message-time">
+          {{ formatTime(m.created_at) }}
+          <ng-container *ngIf="isMine(m)">
+            <ion-icon [name]="m.read_at ? 'checkmark-done' : 'checkmark'"></ion-icon>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="messages.length === 0">
+      Aún no hay mensajes. Envía el primero 👋
+    </p>
+  </div>
+
+  <div class="skeleton" *ngIf="isLoading">Cargando conversación…</div>
+
+  <div #scrollAnchor></div>
+</ion-content>
+
+<button class="new-message-banner" *ngIf="showNewMessageBanner" (click)="scrollToBottom(true)">
+  ↓ Nuevo mensaje
+</button>
+
+<ion-footer class="chat-composer" *ngIf="conversation && !conversation.blocked">
+  <textarea
+    [(ngModel)]="draft"
+    placeholder="Escribe un mensaje..."
+    rows="1"
+    maxlength="2000"
+    [disabled]="isSending"
+    (keydown)="onComposerKeydown($event)"
+  ></textarea>
+  <button
+    class="send-btn"
+    (click)="send()"
+    [disabled]="isSending || !draft.trim()"
+    aria-label="Enviar mensaje"
+  >
+    <ion-icon [name]="isSending ? 'hourglass-outline' : 'send'"></ion-icon>
+  </button>
+</ion-footer>
+
+<div class="chat-blocked-notice" *ngIf="conversation && conversation.blocked">
+  No puedes enviar mensajes a este usuario.
+</div>
+
+<div class="send-error" *ngIf="sendFailed">
+  No pudimos enviar el mensaje.
+  <button (click)="retrySend()">Reintentar</button>
+</div>

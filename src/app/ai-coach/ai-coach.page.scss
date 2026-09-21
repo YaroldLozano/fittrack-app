@@ -1,0 +1,123 @@
+.ai-intro {
+  padding: 0 20px 8px;
+
+  p {
+    margin: 0;
+    color: var(--ft-text-secondary);
+    font: var(--ft-text-body-sm);
+  }
+}
+
+.quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 20px 16px;
+
+  button {
+    text-align: left;
+  }
+}
+
+.ai-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-3);
+  background: var(--ft-surface);
+  margin: 0 20px 16px;
+  padding: var(--ft-space-5);
+  border-radius: var(--ft-radius-lg);
+  border: 1px solid var(--ft-border);
+
+  textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    background: var(--ft-surface-sunken);
+    border: 1px solid var(--ft-border-strong);
+    border-radius: var(--ft-radius-sm);
+    padding: 10px 12px;
+    color: var(--ft-text);
+    font-size: 0.9em;
+    font-family: inherit;
+    resize: vertical;
+
+    &::placeholder {
+      color: var(--ft-text-muted);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--ft-primary);
+    }
+  }
+}
+
+.error {
+  color: var(--ft-danger);
+  font-size: 0.85em;
+  margin: 0 20px 16px;
+}
+
+.suggestion-card {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  margin: 0 20px 32px;
+  padding: var(--ft-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-3);
+}
+
+.suggestion-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ft-space-2);
+
+  h3 {
+    margin: 0;
+    font: var(--ft-text-h3);
+    color: var(--ft-text);
+  }
+}
+
+.suggestion-note {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font: var(--ft-text-body-sm);
+}
+
+.suggestion-exercises {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.suggestion-exercise {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--ft-surface-sunken);
+  border-radius: var(--ft-radius-sm);
+
+  .ex-name {
+    font-weight: 600;
+    color: var(--ft-text);
+    font-size: 0.92em;
+  }
+
+  .ex-detail {
+    color: var(--ft-text-secondary);
+    font-size: 0.8em;
+  }
+}
+
+.suggestion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}

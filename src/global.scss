@@ -1,0 +1,429 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Poppins — tipografía única de FitTrack en toda la app (ver theme/tokens.scss) */
+@import "@fontsource/poppins/300.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+
+/* Jost font used by the sign up / login slide card */
+@import "@fontsource/jost/500.css";
+
+/* FitTrack design tokens — única fuente de verdad de color/spacing/tipografía */
+@import "theme/tokens.scss";
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/**
+ * Shared design system for the authenticated app shell (dashboard, routines,
+ * exercises, workout, calendar, progress, history, goals, profile, social...).
+ * Kept here (global, unscoped) so every feature page can reuse the same
+ * look without repeating it in each component's stylesheet.
+ *
+ * Todo color/spacing/radio/tipografía sale de theme/tokens.scss — nunca
+ * hardcodear hex aquí.
+ */
+body {
+  font-family: var(--ft-font);
+  background: var(--ft-background);
+}
+
+.page {
+  --background: var(--ft-background);
+  --color: var(--ft-text);
+  font-family: var(--ft-font);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--ft-space-3);
+  padding: var(--ft-space-6) var(--ft-space-5) var(--ft-space-2);
+
+  h1 {
+    margin: 0;
+    font: var(--ft-text-h1);
+    color: var(--ft-text);
+  }
+}
+
+.btn-primary {
+  background: var(--ft-primary);
+  color: var(--ft-primary-contrast);
+  border: none;
+  border-radius: var(--ft-radius-pill);
+  padding: 11px 22px;
+  font-weight: 600;
+  font-size: 0.9em;
+  font-family: var(--ft-font);
+  cursor: pointer;
+  transition: background var(--ft-transition-fast), transform var(--ft-transition-fast);
+
+  &:hover:not(:disabled) {
+    background: var(--ft-primary-dark);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.btn-secondary {
+  background: var(--ft-surface-elevated);
+  color: var(--ft-text);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-pill);
+  padding: 9px 18px;
+  font-size: 0.85em;
+  font-family: var(--ft-font);
+  cursor: pointer;
+  transition: background var(--ft-transition-fast), border-color var(--ft-transition-fast);
+
+  &:hover {
+    background: var(--ft-surface);
+    border-color: var(--ft-border-strong);
+  }
+
+  &.active {
+    background: var(--ft-primary-soft);
+    border-color: var(--ft-primary);
+    color: var(--ft-primary);
+  }
+}
+
+.create-form,
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-3);
+  background: var(--ft-surface);
+  margin: var(--ft-space-3) var(--ft-space-5);
+  padding: var(--ft-space-5);
+  border-radius: var(--ft-radius-lg);
+  border: 1px solid var(--ft-border);
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    background: var(--ft-surface-sunken);
+    border: 1px solid var(--ft-border-strong);
+    border-radius: var(--ft-radius-sm);
+    padding: 10px 12px;
+    color: var(--ft-text);
+    font-size: 0.9em;
+    font-family: inherit;
+
+    &::placeholder {
+      color: var(--ft-text-muted);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--ft-primary);
+    }
+  }
+
+  textarea {
+    min-height: 70px;
+    resize: vertical;
+  }
+
+  .error {
+    color: var(--ft-danger);
+    font-size: 0.85em;
+    margin: 0;
+  }
+
+  .success {
+    color: var(--ft-success);
+    font-size: 0.85em;
+    margin: 0;
+  }
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ft-space-2);
+  padding: var(--ft-space-2) var(--ft-space-5);
+
+  select {
+    flex: 1 1 180px;
+    min-width: 0;
+    max-width: 100%;
+    background: var(--ft-surface);
+    border: 1px solid var(--ft-border-strong);
+    color: var(--ft-text);
+    border-radius: var(--ft-radius-sm);
+    padding: 8px 12px;
+    font-size: 0.85em;
+    font-family: inherit;
+  }
+}
+
+.exercise-grid,
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--ft-space-3);
+  padding: var(--ft-space-3) var(--ft-space-5) var(--ft-space-7);
+}
+
+.exercise-card,
+.item-card {
+  background: var(--ft-surface);
+  border-radius: var(--ft-radius-lg);
+  padding: var(--ft-space-4) var(--ft-space-4);
+  color: var(--ft-text);
+  border: 1px solid var(--ft-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-1);
+  transition: border-color var(--ft-transition-fast), background var(--ft-transition-fast);
+
+  .exercise-card-header,
+  .item-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ft-space-2);
+
+    h3 {
+      margin: 0;
+      font: var(--ft-text-h3);
+      color: var(--ft-text);
+    }
+  }
+
+  .delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--ft-text-muted);
+    cursor: pointer;
+    font-size: 1em;
+
+    &:hover {
+      color: var(--ft-danger);
+    }
+  }
+
+  .equipment {
+    margin: 2px 0 0;
+    font: var(--ft-text-body-sm);
+    color: var(--ft-text-secondary);
+  }
+}
+
+.tag {
+  display: inline-block;
+  background: var(--ft-surface-elevated);
+  color: var(--ft-text-secondary);
+  font: var(--ft-text-caption);
+  padding: 3px 10px;
+  border-radius: var(--ft-radius-pill);
+  margin-right: 4px;
+  width: fit-content;
+}
+
+.custom-badge {
+  font: var(--ft-text-caption);
+  color: var(--ft-primary);
+  margin-top: 2px;
+}
+
+.empty {
+  color: var(--ft-text-muted);
+  padding: var(--ft-space-6) 4px;
+  grid-column: 1 / -1;
+  text-align: center;
+  font: var(--ft-text-body);
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 0.7em;
+  padding: 3px 10px;
+  border-radius: var(--ft-radius-pill);
+  font-weight: 600;
+  width: fit-content;
+
+  &.active {
+    background: var(--ft-success-soft);
+    color: var(--ft-success);
+  }
+  &.paused {
+    background: var(--ft-warning-soft);
+    color: var(--ft-warning);
+  }
+  &.completed {
+    background: var(--ft-info-soft);
+    color: var(--ft-info);
+  }
+  &.scheduled {
+    background: var(--ft-info-soft);
+    color: var(--ft-info);
+  }
+  &.in_progress {
+    background: var(--ft-warning-soft);
+    color: var(--ft-warning);
+  }
+  &.skipped {
+    background: var(--ft-surface-elevated);
+    color: var(--ft-text-muted);
+  }
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--ft-radius-pill);
+  background: var(--ft-surface-elevated);
+  overflow: hidden;
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--ft-primary);
+    border-radius: var(--ft-radius-pill);
+    transition: width 0.3s ease;
+  }
+}
+
+/* ---- Fila de accesos rápidos (usada en hubs: progreso, entrenar, ranking) ---- */
+.quick-links {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 20px 14px;
+
+  a {
+    flex-shrink: 0;
+    background: var(--ft-surface);
+    border: 1px solid var(--ft-border);
+    color: var(--ft-text);
+    padding: 8px 14px;
+    border-radius: var(--ft-radius-pill);
+    font-size: 0.85em;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+}
+
+/* ---- Cuadrícula de publicaciones (perfil propio y de amigos) ---- */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 0 20px 20px;
+}
+
+.posts-grid-item {
+  aspect-ratio: 1;
+  border-radius: var(--ft-radius-sm);
+  overflow: hidden;
+  background: var(--ft-surface);
+  cursor: pointer;
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.posts-grid-text {
+  padding: 8px;
+  font-size: 0.7em;
+  color: var(--ft-text-secondary);
+  overflow: hidden;
+}
+
+/* ---- Tabla de series (entrenamiento, historial, retos) ---- */
+.sets-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  td {
+    padding: 6px;
+    font-size: 0.85em;
+    color: var(--ft-text-secondary);
+    border-bottom: 1px solid var(--ft-border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ---- Avatar por iniciales (sin foto de perfil en el modelo de datos) ---- */
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--ft-radius-pill);
+  background: var(--ft-primary-soft);
+  color: var(--ft-primary);
+  font-weight: 700;
+  font-size: 0.95em;
+
+  &.sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8em;
+  }
+
+  &.lg {
+    width: 56px;
+    height: 56px;
+    font-size: 1.2em;
+  }
+}

@@ -1,0 +1,36 @@
+.ranking-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 20px 12px;
+
+  button {
+    flex-shrink: 0;
+    background: var(--ft-surface);
+    border: none;
+    color: var(--ft-text-secondary);
+    padding: 8px 16px;
+    border-radius: var(--ft-radius-pill);
+    font-size: 0.85em;
+    font-weight: 600;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &.active {
+      background: var(--ft-primary);
+      color: var(--ft-primary-contrast);
+    }
+  }
+}
+
+.friend-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-3);
+
+  .item-card-header {
+    flex: 1;
+  }
+}

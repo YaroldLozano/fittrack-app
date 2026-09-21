@@ -1,0 +1,59 @@
+<div class="viewer" *ngIf="!isLoading && group">
+  <div class="progress-row">
+    <div class="progress-segment" *ngFor="let s of group.stories; let i = index">
+      <div
+        class="progress-fill"
+        [style.width.%]="i < index ? 100 : i === index ? progress : 0"
+      ></div>
+    </div>
+  </div>
+
+  <div class="viewer-header">
+    <app-avatar [mediaId]="group.author.avatar_media_id" [username]="group.author.username" size="sm"></app-avatar>
+    <span class="viewer-username">{{ group.author.username }}</span>
+    <span class="viewer-time">{{ current?.created_at | date: 'shortTime' }}</span>
+    <button class="viewer-close" (click)="close()" aria-label="Cerrar">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </div>
+
+  <div class="viewer-media" *ngIf="current">
+    <img *ngIf="current.media_type === 'image'" [secureSrc]="current.media_id" alt="" />
+    <video
+      *ngIf="current.media_type === 'video'"
+      [secureSrc]="current.media_id"
+      autoplay
+      muted
+      playsinline
+      (timeupdate)="onVideoTimeUpdate($event)"
+      (ended)="next()"
+    ></video>
+
+    <div class="tap-zone left" (click)="prev()"></div>
+    <div class="tap-zone right" (click)="next()"></div>
+
+    <p class="viewer-caption" *ngIf="current.caption">{{ current.caption }}</p>
+  </div>
+
+  <div class="viewer-footer" *ngIf="isMine">
+    <button class="footer-btn" (click)="toggleViewers()">
+      <ion-icon name="eye-outline"></ion-icon>
+      Vistas
+    </button>
+    <button class="footer-btn danger" (click)="deleteCurrent()">
+      <ion-icon name="trash-outline"></ion-icon>
+      Eliminar
+    </button>
+  </div>
+
+  <div class="viewers-sheet" *ngIf="showViewers" (click)="toggleViewers()">
+    <div class="viewers-panel" (click)="$event.stopPropagation()">
+      <h3>Vistas</h3>
+      <div class="viewer-row" *ngFor="let v of viewers">
+        <app-avatar [mediaId]="v.avatar_media_id" [username]="v.username" size="sm"></app-avatar>
+        <span>{{ v.username }}</span>
+      </div>
+      <p class="empty" *ngIf="viewers.length === 0">Nadie ha visto esta historia todavía</p>
+    </div>
+  </div>
+</div>

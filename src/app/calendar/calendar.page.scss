@@ -1,0 +1,126 @@
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 4px 20px 12px;
+  color: var(--ft-text);
+
+  h2 {
+    margin: 0;
+    font-size: 1.1em;
+    text-transform: capitalize;
+    min-width: 160px;
+    text-align: center;
+  }
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 20px;
+  color: var(--ft-text-muted);
+  font-size: 0.75em;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding: 0 20px;
+}
+
+.day-cell {
+  aspect-ratio: 1;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-sm);
+  color: var(--ft-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  font-family: inherit;
+
+  &.dim {
+    opacity: 0.3;
+  }
+
+  &.today .day-number {
+    color: var(--ft-primary);
+    font-weight: 700;
+  }
+
+  &.selected {
+    border-color: var(--ft-primary);
+  }
+
+  .day-number {
+    font-size: 0.8em;
+  }
+
+  .rest-dot {
+    font-size: 0.6em;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ft-info);
+
+    &.completed {
+      background: var(--ft-success);
+    }
+    &.in_progress {
+      background: var(--ft-warning);
+    }
+  }
+}
+
+.day-detail {
+  margin: 16px 20px 32px;
+  background: var(--ft-surface);
+  border-radius: var(--ft-radius-lg);
+  padding: 16px 18px;
+  color: var(--ft-text);
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1em;
+  }
+}
+
+.workout-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ft-border);
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.empty-inline {
+  color: var(--ft-text-muted);
+  font-size: 0.85em;
+}
+
+.quick-create {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+
+  input {
+    flex: 1;
+    background: var(--ft-surface-sunken);
+    border: 1px solid var(--ft-border-strong);
+    border-radius: var(--ft-radius-sm);
+    padding: 8px 10px;
+    color: var(--ft-text);
+  }
+}

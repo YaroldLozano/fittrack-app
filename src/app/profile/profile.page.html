@@ -1,0 +1,84 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Perfil</h1>
+  </div>
+
+  <div class="user-card" *ngIf="user">
+    <label class="avatar-upload">
+      <app-avatar [mediaId]="avatarMediaId" [username]="user.username" size="lg"></app-avatar>
+      <span class="avatar-overlay" *ngIf="!isUploadingAvatar">✎</span>
+      <span class="avatar-overlay" *ngIf="isUploadingAvatar">…</span>
+      <input type="file" accept="image/*" hidden (change)="onAvatarSelected($event)" />
+    </label>
+    <div>
+      <h2>{{ user.username }}</h2>
+      <p *ngIf="user.email">{{ user.email }}</p>
+      <p *ngIf="me">{{ me.badge }} {{ me.level_name }} · {{ me.xp_total | number }} XP<span *ngIf="me.current_streak_days > 0"> · 🔥 {{ me.current_streak_days }} días</span></p>
+      <button class="link-btn" *ngIf="avatarMediaId" (click)="removeAvatar()">Quitar foto</button>
+    </div>
+  </div>
+
+  <div class="bio-card">
+    <ng-container *ngIf="!isEditingProfile">
+      <p class="bio-text" *ngIf="bio">{{ bio }}</p>
+      <p class="bio-text muted" *ngIf="!bio">Sin biografía todavía.</p>
+      <button class="btn-secondary" (click)="startEditProfile()">Editar perfil</button>
+    </ng-container>
+    <div class="bio-edit" *ngIf="isEditingProfile">
+      <textarea [(ngModel)]="bioDraft" placeholder="Cuéntanos sobre ti…" maxlength="160" rows="2"></textarea>
+      <div class="filter-row">
+        <button class="btn-primary" [disabled]="isSavingProfile" (click)="saveProfile()">
+          {{ isSavingProfile ? 'Guardando…' : 'Guardar' }}
+        </button>
+        <button class="btn-secondary" (click)="isEditingProfile = false">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <form class="create-form" (ngSubmit)="submitEmail()">
+    <span class="card-label">Correo (para recuperar tu contraseña)</span>
+    <input type="email" name="emailDraft" [(ngModel)]="emailDraft" placeholder="tu@correo.com" required />
+    <p class="error" *ngIf="emailError">{{ emailError }}</p>
+    <p class="success" *ngIf="emailSuccess">{{ emailSuccess }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isSavingEmail">
+      {{ isSavingEmail ? 'Guardando...' : 'Guardar correo' }}
+    </button>
+  </form>
+
+  <div class="chart-card" *ngIf="metrics.length > 0">
+    <span class="card-label">Evolución de peso corporal</span>
+    <canvas baseChart [type]="'line'" [data]="chartData" [options]="chartOptions"></canvas>
+  </div>
+
+  <form class="create-form" (ngSubmit)="submit()">
+    <span class="card-label">Registrar peso / medidas</span>
+    <input type="date" name="recorded_date" [(ngModel)]="draft.recorded_date" />
+    <div class="measure-grid">
+      <input type="number" name="weight" [(ngModel)]="draft.weight" placeholder="Peso (kg)" />
+      <input type="number" name="height" [(ngModel)]="draft.height" placeholder="Altura (cm)" />
+      <input type="number" name="body_fat_percentage" [(ngModel)]="draft.body_fat_percentage" placeholder="% grasa" />
+      <input type="number" name="chest" [(ngModel)]="draft.chest" placeholder="Pecho (cm)" />
+      <input type="number" name="waist" [(ngModel)]="draft.waist" placeholder="Cintura (cm)" />
+      <input type="number" name="arm" [(ngModel)]="draft.arm" placeholder="Brazo (cm)" />
+      <input type="number" name="leg" [(ngModel)]="draft.leg" placeholder="Pierna (cm)" />
+      <input type="number" name="hip" [(ngModel)]="draft.hip" placeholder="Cadera (cm)" />
+    </div>
+    <p class="error" *ngIf="formError">{{ formError }}</p>
+    <p class="success" *ngIf="formSuccess">{{ formSuccess }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isSaving">{{ isSaving ? 'Guardando...' : 'Guardar registro' }}</button>
+  </form>
+
+  <div class="posts-grid-section">
+    <span class="card-label">Mis publicaciones</span>
+    <div class="posts-grid" *ngIf="myPosts.length > 0">
+      <div class="posts-grid-item" *ngFor="let p of myPosts" (click)="openPost(p.id)">
+        <img *ngIf="p.media[0]?.type === 'image'" [secureSrc]="p.media[0].id" [thumb]="true" alt="" />
+        <video *ngIf="p.media[0]?.type === 'video'" [secureSrc]="p.media[0].id" muted></video>
+        <div class="posts-grid-text" *ngIf="p.media.length === 0">{{ p.caption }}</div>
+      </div>
+    </div>
+    <p class="empty" *ngIf="myPosts.length === 0">Aún no tienes publicaciones. <a routerLink="/app/create-post">Crear publicación</a></p>
+  </div>
+
+  <button class="btn-secondary logout" (click)="onLogout()">Cerrar sesión</button>
+</ion-content>

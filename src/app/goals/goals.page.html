@@ -1,0 +1,50 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Objetivos</h1>
+    <button class="btn-primary" (click)="toggleForm()">{{ showForm ? 'Cancelar' : '+ Nuevo objetivo' }}</button>
+  </div>
+
+  <form class="create-form" *ngIf="showForm" (ngSubmit)="submit()">
+    <input type="text" name="title" [(ngModel)]="newGoal.title" placeholder="Título (ej. Levantar 100kg en press banca)" />
+    <select name="type" [(ngModel)]="newGoal.type">
+      <option *ngFor="let t of typeOptions" [value]="t">
+        {{ typeLabels[t] }}
+      </option>
+    </select>
+    <select name="exercise_id" [(ngModel)]="newGoal.exercise_id" *ngIf="newGoal.type === 'exercise_weight'">
+      <option [ngValue]="null" disabled>Ejercicio</option>
+      <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
+    </select>
+    <div class="target-row">
+      <input type="number" name="target_value" [(ngModel)]="newGoal.target_value" placeholder="Meta (número)" />
+      <input type="text" name="unit" [(ngModel)]="newGoal.unit" placeholder="Unidad (kg, veces...)" />
+    </div>
+    <label class="date-label">Fecha objetivo (opcional)
+      <input type="date" name="target_date" [(ngModel)]="newGoal.target_date" />
+    </label>
+    <p class="error" *ngIf="formError">{{ formError }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isSaving">{{ isSaving ? 'Guardando...' : 'Crear objetivo' }}</button>
+  </form>
+
+  <div class="card-list">
+    <div class="item-card" *ngFor="let goal of goals">
+      <div class="item-card-header">
+        <h3>{{ goal.title }}</h3>
+        <span class="status-badge" [ngClass]="goal.status">{{ goal.status === 'completed' ? 'Completado' : 'En progreso' }}</span>
+      </div>
+      <p class="equipment">{{ typeLabels[goal.type] }}</p>
+
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" [style.width.%]="goal.progress_percent"></div>
+      </div>
+      <div class="progress-labels">
+        <span>{{ goal.progress_percent }}%</span>
+        <span *ngIf="goal.target_value">{{ goal.current_value }} / {{ goal.target_value }} {{ goal.unit }}</span>
+      </div>
+
+      <button class="btn-secondary" *ngIf="goal.status !== 'completed'" (click)="markCompleted(goal)">Marcar como completado</button>
+    </div>
+
+    <p class="empty" *ngIf="goals.length === 0">No tienes objetivos todavía. ¡Crea el primero!</p>
+  </div>
+</ion-content>

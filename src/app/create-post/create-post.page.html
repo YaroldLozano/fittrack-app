@@ -1,0 +1,45 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Crear publicación</h1>
+    <button class="btn-secondary" (click)="cancel()">Cancelar</button>
+  </div>
+
+  <div class="create-post-form">
+    <textarea
+      [(ngModel)]="caption"
+      placeholder="¿Qué estás entrenando hoy?"
+      rows="4"
+      maxlength="2000"
+    ></textarea>
+
+    <div class="media-grid" *ngIf="items.length > 0">
+      <div class="media-item" *ngFor="let item of items">
+        <img *ngIf="item.file.type.startsWith('image/')" [src]="item.previewUrl" alt="" />
+        <video *ngIf="item.file.type.startsWith('video/')" [src]="item.previewUrl" muted></video>
+        <div class="media-overlay" *ngIf="item.isUploading">Subiendo…</div>
+        <div class="media-overlay error" *ngIf="item.failed">Error</div>
+        <button class="media-remove" (click)="removeItem(item)">✕</button>
+      </div>
+    </div>
+
+    <label class="btn-secondary attach-btn" *ngIf="items.length < 6">
+      + Foto/Video
+      <input type="file" accept="image/*,video/*" multiple hidden (change)="onFilesSelected($event)" />
+    </label>
+
+    <div class="visibility-row">
+      <span class="field-label">Visibilidad</span>
+      <div class="filter-row">
+        <button class="btn-secondary" [class.active]="visibility === 'public'" (click)="visibility = 'public'">Público</button>
+        <button class="btn-secondary" [class.active]="visibility === 'friends'" (click)="visibility = 'friends'">Amigos</button>
+        <button class="btn-secondary" [class.active]="visibility === 'private'" (click)="visibility = 'private'">Privado</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <button class="btn-primary publish-btn" [disabled]="!canPublish" (click)="publish()">
+      {{ isPublishing ? 'Publicando…' : 'Publicar' }}
+    </button>
+  </div>
+</ion-content>

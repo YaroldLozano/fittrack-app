@@ -1,0 +1,39 @@
+.rank-hero {
+  margin: 0 20px 16px;
+  padding: 20px;
+  border-radius: var(--ft-radius-xl);
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+
+  .profile-hero-top {
+    display: flex;
+    align-items: center;
+    gap: var(--ft-space-3);
+    margin-bottom: var(--ft-space-2);
+  }
+
+  .bio-text {
+    margin: 0 0 8px;
+    color: var(--ft-text-secondary);
+    font-size: 0.85em;
+  }
+
+  .rank-hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .rank-xp {
+    font: var(--ft-text-stat);
+    color: var(--ft-primary);
+    margin-bottom: 8px;
+  }
+
+  .rank-next {
+    color: var(--ft-text-secondary);
+    font-size: 0.85em;
+    margin: 4px 0 0;
+  }
+}

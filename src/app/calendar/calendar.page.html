@@ -1,0 +1,49 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Calendario</h1>
+  </div>
+
+  <div class="month-nav">
+    <button class="btn-secondary" (click)="changeMonth(-1)">←</button>
+    <h2>{{ monthLabel }}</h2>
+    <button class="btn-secondary" (click)="changeMonth(1)">→</button>
+  </div>
+
+  <div class="weekday-row">
+    <span *ngFor="let d of weekdayLabels">{{ d }}</span>
+  </div>
+
+  <div class="month-grid">
+    <button
+      class="day-cell"
+      *ngFor="let cell of cells"
+      [class.dim]="!cell.inCurrentMonth"
+      [class.today]="cell.isToday"
+      [class.selected]="cell.date === selectedDate"
+      (click)="selectDate(cell)"
+    >
+      <span class="day-number">{{ cell.dayNumber }}</span>
+      <span class="rest-dot" *ngIf="cell.isRestDay">😴</span>
+      <span class="dot" *ngFor="let w of cell.workouts" [ngClass]="w.status"></span>
+    </button>
+  </div>
+
+  <div class="day-detail" *ngIf="selectedCell as cell">
+    <h3>{{ cell.date }}</h3>
+
+    <div class="workout-item" *ngFor="let w of cell.workouts" (click)="openWorkout(w)">
+      <span>{{ w.name }}</span>
+      <span class="status-badge" [ngClass]="w.status">{{ w.status }}</span>
+    </div>
+
+    <p class="empty-inline" *ngIf="cell.workouts.length === 0 && !cell.isRestDay">Sin entrenamientos este día.</p>
+    <p class="empty-inline" *ngIf="cell.isRestDay">Día de descanso según tu rutina activa 😴</p>
+
+    <div class="quick-create">
+      <input type="text" [(ngModel)]="newWorkoutName" placeholder="Nombre del nuevo entrenamiento" />
+      <button class="btn-primary" [disabled]="isCreating || !newWorkoutName" (click)="createWorkoutForSelectedDate()">
+        + Programar
+      </button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,50 @@
+.skeleton {
+  padding: 40px 20px;
+  color: var(--ft-text-muted);
+  text-align: center;
+}
+
+.notification-list {
+  padding-bottom: 32px;
+}
+
+.notification-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-3);
+  padding: 12px var(--ft-space-4);
+  border-bottom: 1px solid var(--ft-border);
+  cursor: pointer;
+
+  &.unread {
+    background: var(--ft-notify-soft);
+  }
+
+  &:hover {
+    background: var(--ft-surface);
+  }
+}
+
+.notification-body {
+  flex: 1;
+  min-width: 0;
+
+  p {
+    margin: 0;
+    font-size: 0.88em;
+    color: var(--ft-text);
+  }
+}
+
+.notification-time {
+  font-size: 0.72em;
+  color: var(--ft-text-muted);
+}
+
+.unread-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ft-notify);
+}

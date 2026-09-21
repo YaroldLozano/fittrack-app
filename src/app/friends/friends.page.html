@@ -1,0 +1,80 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>👥 Amigos</h1>
+  </div>
+
+  <div class="ranking-tabs">
+    <button [class.active]="tab === 'amigos'" (click)="setTab('amigos')">Mis amigos</button>
+    <button [class.active]="tab === 'solicitudes'" (click)="setTab('solicitudes')">
+      Solicitudes <span class="tag" *ngIf="incoming.length > 0">{{ incoming.length }}</span>
+    </button>
+    <button [class.active]="tab === 'buscar'" (click)="setTab('buscar')">Buscar</button>
+  </div>
+
+  <ng-container *ngIf="tab === 'amigos'">
+    <div class="card-list">
+      <div class="item-card friend-card" *ngFor="let f of friends" (click)="openProfile(f.id)">
+        <div class="friend-card-top">
+          <app-avatar [mediaId]="f.avatar_media_id" [username]="f.username"></app-avatar>
+          <div class="item-card-header">
+            <h3>{{ f.badge }} {{ f.username }}</h3>
+            <span class="tag">Nv. {{ f.level }}</span>
+          </div>
+        </div>
+        <p class="equipment">{{ f.xp_total }} XP · 🔥 {{ f.current_streak_days }} días</p>
+        <button class="btn-secondary" (click)="openChat($event, f.id)" [disabled]="isOpeningChat">💬 Mensaje</button>
+      </div>
+      <p class="empty" *ngIf="!isLoading && friends.length === 0">
+        👥 Aún no tienes amigos. Agrega personas para comenzar a competir.
+      </p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'solicitudes'">
+    <span class="card-label" style="padding: 0 20px">Recibidas</span>
+    <div class="card-list">
+      <div class="item-card" *ngFor="let r of incoming">
+        <div class="item-card-header">
+          <h3>{{ r.from_username }}</h3>
+        </div>
+        <div class="filter-row">
+          <button class="btn-primary" (click)="accept(r.id)">Aceptar</button>
+          <button class="btn-secondary" (click)="reject(r.id)">Rechazar</button>
+        </div>
+      </div>
+      <p class="empty" *ngIf="incoming.length === 0">No tienes solicitudes recibidas</p>
+    </div>
+
+    <span class="card-label" style="padding: 0 20px">Enviadas</span>
+    <div class="card-list">
+      <div class="item-card" *ngFor="let r of outgoing">
+        <div class="item-card-header">
+          <h3>{{ r.to_username }}</h3>
+          <span class="tag">pendiente</span>
+        </div>
+        <button class="btn-secondary" (click)="cancel(r.id)">Cancelar</button>
+      </div>
+      <p class="empty" *ngIf="outgoing.length === 0">No tienes solicitudes enviadas</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tab === 'buscar'">
+    <div class="filter-row">
+      <input type="text" [(ngModel)]="query" placeholder="Buscar por username..." (keyup.enter)="search()" />
+      <button class="btn-primary" (click)="search()" [disabled]="isSearching">Buscar</button>
+    </div>
+    <div class="card-list">
+      <div class="item-card" *ngFor="let u of searchResults">
+        <div class="item-card-header">
+          <h3>{{ u.badge }} {{ u.username }}</h3>
+          <span class="tag">Nv. {{ u.level }}</span>
+        </div>
+        <button class="btn-primary" *ngIf="u.relation === 'none'" (click)="sendRequest(u.id)">+ Agregar</button>
+        <span class="tag" *ngIf="u.relation === 'pending_outgoing'">Solicitud enviada</span>
+        <span class="tag" *ngIf="u.relation === 'pending_incoming'">Te envió una solicitud</span>
+        <span class="tag" *ngIf="u.relation === 'friends'">Ya son amigos</span>
+      </div>
+      <p class="empty" *ngIf="query && searchResults.length === 0 && !isSearching">Sin resultados</p>
+    </div>
+  </ng-container>
+</ion-content>

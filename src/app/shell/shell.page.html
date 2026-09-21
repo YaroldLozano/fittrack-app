@@ -1,0 +1,80 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <ion-icon name="flame"></ion-icon>
+      <span>FitTrack</span>
+    </div>
+
+    <nav class="nav-list">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <ion-icon [name]="item.icon"></ion-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <button class="logout-btn" (click)="onLogout()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <span>Cerrar sesión</span>
+    </button>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar-user" *ngIf="username">Hola, <strong>{{ username }}</strong></span>
+
+      <button class="menu-trigger" (click)="toggleMenu()" aria-label="Abrir menú">
+        <app-avatar [mediaId]="myAvatarMediaId" [username]="username || ''" size="sm"></app-avatar>
+        <span class="menu-badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
+      </button>
+
+      <button class="logout-btn-mobile" (click)="onLogout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </header>
+
+    <div class="app-menu-backdrop" *ngIf="menuOpen" (click)="closeMenu()"></div>
+    <nav class="app-menu" *ngIf="menuOpen">
+      <div class="app-menu-section" *ngFor="let section of menuSections">
+        <span class="app-menu-title">{{ section.title }}</span>
+        <a
+          class="app-menu-link"
+          *ngFor="let link of section.links"
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+        >
+          <ion-icon [name]="link.icon"></ion-icon>
+          <span>{{ link.label }}</span>
+        </a>
+      </div>
+      <div class="app-menu-section">
+        <span class="app-menu-title">Cuenta</span>
+        <button class="app-menu-link danger" (click)="onLogout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+    <nav class="bottom-nav">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        class="bottom-nav-item"
+      >
+        <ion-icon [name]="item.icon"></ion-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+  </div>
+</div>

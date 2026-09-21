@@ -1,0 +1,101 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Rutinas</h1>
+    <button class="btn-primary" (click)="showBuilder ? cancelBuilder() : openCreate()">
+      {{ showBuilder ? 'Cancelar' : '+ Nueva rutina' }}
+    </button>
+  </div>
+
+  <form class="builder" *ngIf="showBuilder" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-card">
+      <input type="text" formControlName="name" placeholder="Nombre de la rutina (ej. Rutina Hipertrofia)" />
+      <textarea formControlName="description" placeholder="Descripción (opcional)"></textarea>
+      <input type="text" formControlName="goal" placeholder="Objetivo (ej. Hipertrofia, fuerza...)" />
+      <div class="date-row">
+        <label>Inicio <input type="date" formControlName="start_date" /></label>
+        <label>Fin (opcional) <input type="date" formControlName="end_date" /></label>
+      </div>
+      <select formControlName="status">
+        <option value="active">Activa</option>
+        <option value="paused">Pausada</option>
+        <option value="completed">Completada</option>
+      </select>
+    </div>
+
+    <div class="days-builder" formArrayName="days">
+      <div class="day-card" *ngFor="let dayGroup of days.controls; let dayIndex = index" [formGroupName]="dayIndex">
+        <div class="day-card-header">
+          <select formControlName="day_of_week">
+            <option *ngFor="let name of dayNames; let i = index" [ngValue]="i">{{ name }}</option>
+          </select>
+          <label class="rest-toggle">
+            <input type="checkbox" formControlName="is_rest_day" /> Día de descanso
+          </label>
+          <button type="button" class="delete-btn" (click)="removeDay(dayIndex)">✕</button>
+        </div>
+
+        <input type="text" formControlName="label" placeholder="Apodo del día (opcional, ej. Pecho y Tríceps)" />
+
+        <div class="exercises-builder" formArrayName="exercises" *ngIf="!dayGroup.get('is_rest_day')?.value">
+          <div class="exercise-row" *ngFor="let exGroup of exercisesOf(dayIndex).controls; let exIndex = index" [formGroupName]="exIndex">
+            <select formControlName="exercise_id">
+              <option [ngValue]="null" disabled>Ejercicio</option>
+              <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
+            </select>
+            <input type="number" formControlName="sets" placeholder="Series" min="1" />
+            <input type="number" formControlName="reps" placeholder="Reps" min="1" />
+            <input type="number" formControlName="target_weight" placeholder="Peso (kg)" />
+            <input type="number" formControlName="rest_seconds" placeholder="Descanso (s)" />
+            <button type="button" class="delete-btn" (click)="removeExercise(dayIndex, exIndex)">✕</button>
+          </div>
+          <button type="button" class="btn-secondary" (click)="addExercise(dayIndex)">+ Ejercicio</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn-secondary" (click)="addDay()">+ Agregar día</button>
+    </div>
+
+    <p class="error" *ngIf="formError">{{ formError }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isSaving">
+      {{ isSaving ? 'Guardando...' : 'Guardar rutina' }}
+    </button>
+  </form>
+
+  <div class="templates-section" *ngIf="!showBuilder">
+    <h2>Empezar desde una plantilla</h2>
+    <div class="templates-row">
+      <div class="template-card" *ngFor="let template of templates">
+        <h3>{{ template.name }}</h3>
+        <p>{{ template.description }}</p>
+        <span class="tag">{{ template.days.length }} días/semana</span>
+        <button type="button" class="btn-secondary" (click)="useTemplate(template)">Usar esta plantilla</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-list" *ngIf="!showBuilder">
+    <div class="item-card" *ngFor="let routine of routines">
+      <div class="item-card-header">
+        <h3>{{ routine.name }}</h3>
+        <span class="status-badge" [ngClass]="routine.status">{{ routine.status }}</span>
+      </div>
+      <p class="equipment" *ngIf="routine.goal">🎯 {{ routine.goal }}</p>
+      <div class="days-summary">
+        <span class="tag" *ngFor="let day of routine.days">
+          {{ day.is_rest_day ? (dayNames[day.day_of_week] + ' · Descanso') : (dayNames[day.day_of_week] + (day.label ? ' · ' + day.label : '')) }}
+        </span>
+      </div>
+      <div class="actions">
+        <button class="btn-secondary" (click)="openEdit(routine)">Editar</button>
+        <button class="btn-secondary" (click)="duplicate(routine)">Duplicar</button>
+        <button class="btn-secondary" (click)="toggleStatus(routine)">
+          {{ routine.status === 'active' ? 'Pausar' : 'Activar' }}
+        </button>
+        <button class="btn-secondary" *ngIf="routine.status !== 'completed'" (click)="markCompleted(routine)">Completar</button>
+        <button class="delete-btn" (click)="remove(routine)">Eliminar</button>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="routines.length === 0">Todavía no tienes rutinas. Crea la primera 💪</p>
+  </div>
+</ion-content>

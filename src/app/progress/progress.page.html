@@ -1,0 +1,73 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Progreso</h1>
+  </div>
+
+  <div class="quick-links">
+    <a routerLink="/app/goals">🎯 Objetivos</a>
+    <a routerLink="/app/history">🕓 Historial</a>
+    <a routerLink="/app/calendar">📅 Calendario</a>
+  </div>
+
+  <div class="grid" *ngIf="general">
+    <div class="card stat">
+      <span class="card-label">Esta semana</span>
+      <h2>{{ general.workouts_this_week }}</h2>
+    </div>
+    <div class="card stat">
+      <span class="card-label">Este mes</span>
+      <h2>{{ general.workouts_this_month }}</h2>
+    </div>
+    <div class="card stat">
+      <span class="card-label">Tiempo entrenado</span>
+      <h2>{{ (general.total_time_trained_seconds / 60) | number: '1.0-0' }} min</h2>
+    </div>
+    <div class="card stat">
+      <span class="card-label">Series realizadas</span>
+      <h2>{{ general.total_sets }}</h2>
+    </div>
+    <div class="card stat">
+      <span class="card-label">Repeticiones</span>
+      <h2>{{ general.total_reps }}</h2>
+    </div>
+    <div class="card stat">
+      <span class="card-label">Volumen total</span>
+      <h2>{{ general.total_volume | number: '1.0-0' }} kg</h2>
+    </div>
+  </div>
+
+  <div class="exercise-picker">
+    <select [(ngModel)]="selectedExerciseId" (ngModelChange)="onSelectExercise()">
+      <option [ngValue]="null">Selecciona un ejercicio para ver su progreso</option>
+      <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
+    </select>
+  </div>
+
+  <div class="exercise-progress" *ngIf="exerciseProgress">
+    <div class="grid">
+      <div class="card stat">
+        <span class="card-label">Peso máximo</span>
+        <h2>{{ exerciseProgress.max_weight ?? '—' }} kg</h2>
+      </div>
+      <div class="card stat">
+        <span class="card-label">Repeticiones máximas</span>
+        <h2>{{ exerciseProgress.max_reps ?? '—' }}</h2>
+      </div>
+      <div class="card stat">
+        <span class="card-label">Volumen total</span>
+        <h2>{{ exerciseProgress.total_volume | number: '1.0-0' }} kg</h2>
+      </div>
+      <div class="card stat" *ngIf="exerciseProgress.best_set as best">
+        <span class="card-label">Mejor serie</span>
+        <h2>{{ best.weight }} kg × {{ best.reps }}</h2>
+      </div>
+    </div>
+
+    <div class="chart-card" *ngIf="exerciseProgress.evolution.length > 0">
+      <canvas baseChart [type]="'line'" [data]="chartData" [options]="chartOptions"></canvas>
+    </div>
+    <p class="empty" *ngIf="exerciseProgress.evolution.length === 0">
+      Todavía no hay series registradas para este ejercicio.
+    </p>
+  </div>
+</ion-content>

@@ -1,0 +1,153 @@
+.builder {
+  padding: 0 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.templates-section {
+  padding: 0 20px 8px;
+
+  h2 {
+    margin: 0 0 10px;
+    font: var(--ft-text-h3);
+    color: var(--ft-text);
+  }
+}
+
+.templates-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--ft-space-3);
+}
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  padding: var(--ft-space-4);
+
+  h3 {
+    margin: 0;
+    font: var(--ft-text-h3);
+    color: var(--ft-text);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ft-text-secondary);
+    font: var(--ft-text-body-sm);
+  }
+
+  button {
+    margin-top: 6px;
+    width: 100%;
+  }
+}
+
+.date-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75em;
+    color: var(--ft-text-secondary);
+    flex: 1;
+  }
+}
+
+.days-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.day-card {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.day-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  select {
+    flex: 1;
+  }
+
+  .rest-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8em;
+    color: var(--ft-text-secondary);
+    white-space: nowrap;
+  }
+}
+
+.exercises-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exercise-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+
+  select,
+  input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  select,
+  .delete-btn {
+    grid-column: 1 / -1;
+  }
+
+  .delete-btn {
+    justify-self: end;
+  }
+}
+
+@media (min-width: 560px) {
+  .exercise-row {
+    grid-template-columns: minmax(0, 2fr) repeat(4, minmax(0, 1fr)) auto;
+
+    select,
+    .delete-btn {
+      grid-column: auto;
+    }
+  }
+}
+
+.days-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}

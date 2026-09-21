@@ -1,0 +1,26 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Notificaciones</h1>
+    <button class="btn-secondary" *ngIf="hasUnread" (click)="markAllRead()">Marcar todas leídas</button>
+  </div>
+
+  <div class="skeleton" *ngIf="isLoading">Cargando…</div>
+
+  <div class="notification-list" *ngIf="!isLoading">
+    <div
+      class="notification-row"
+      *ngFor="let n of notifications"
+      [class.unread]="!n.is_read"
+      (click)="open(n)"
+    >
+      <app-avatar [mediaId]="n.actor.avatar_media_id" [username]="n.actor.username" size="sm"></app-avatar>
+      <div class="notification-body">
+        <p>{{ text(n) }}</p>
+        <span class="notification-time">{{ n.created_at | date: 'medium' }}</span>
+      </div>
+      <span class="unread-dot" *ngIf="!n.is_read"></span>
+    </div>
+
+    <p class="empty" *ngIf="notifications.length === 0">Aún no tienes notificaciones.</p>
+  </div>
+</ion-content>

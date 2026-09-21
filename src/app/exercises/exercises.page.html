@@ -1,0 +1,46 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Ejercicios</h1>
+    <button class="btn-primary" (click)="toggleForm()">{{ showForm ? 'Cancelar' : '+ Nuevo ejercicio' }}</button>
+  </div>
+
+  <form class="create-form" *ngIf="showForm" (ngSubmit)="onCreate()">
+    <input type="text" name="name" [(ngModel)]="newExercise.name" placeholder="Nombre del ejercicio" required />
+    <select name="muscle_group_id" [(ngModel)]="newExercise.muscle_group_id" required>
+      <option [ngValue]="null" disabled>Grupo muscular</option>
+      <option *ngFor="let mg of muscleGroups" [ngValue]="mg.id">{{ mg.name }}</option>
+    </select>
+    <input type="text" name="equipment" [(ngModel)]="newExercise.equipment" placeholder="Equipo (opcional)" />
+    <select name="difficulty_level" [(ngModel)]="newExercise.difficulty_level">
+      <option value="">Nivel de dificultad</option>
+      <option value="beginner">Principiante</option>
+      <option value="intermediate">Intermedio</option>
+      <option value="advanced">Avanzado</option>
+    </select>
+    <textarea name="description" [(ngModel)]="newExercise.description" placeholder="Descripción (opcional)"></textarea>
+    <p class="error" *ngIf="formError">{{ formError }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isSaving">{{ isSaving ? 'Guardando...' : 'Guardar ejercicio' }}</button>
+  </form>
+
+  <div class="filter-row">
+    <select [(ngModel)]="filterMuscleGroupId" (ngModelChange)="onFilterChange()">
+      <option [ngValue]="null">Todos los grupos musculares</option>
+      <option *ngFor="let mg of muscleGroups" [ngValue]="mg.id">{{ mg.name }}</option>
+    </select>
+  </div>
+
+  <div class="exercise-grid">
+    <div class="exercise-card" *ngFor="let ex of exercises">
+      <div class="exercise-card-header">
+        <h3>{{ ex.name }}</h3>
+        <button class="delete-btn" *ngIf="isOwn(ex)" (click)="onDelete(ex)">✕</button>
+      </div>
+      <span class="tag">{{ ex.muscle_group_name }}</span>
+      <span class="tag" *ngIf="ex.difficulty_level">{{ ex.difficulty_level }}</span>
+      <p class="equipment" *ngIf="ex.equipment">{{ ex.equipment }}</p>
+      <span class="custom-badge" *ngIf="ex.user_id !== null">Personalizado</span>
+    </div>
+
+    <p class="empty" *ngIf="exercises.length === 0">No hay ejercicios para mostrar.</p>
+  </div>
+</ion-content>

@@ -1,0 +1,148 @@
+/**
+ * FitTrack — Design tokens
+ * -----------------------------------------------------------------------
+ * Única fuente de verdad para color, tipografía, spacing, radios, sombras
+ * y transiciones. Ningún componente debe usar valores hex/px sueltos —
+ * siempre a través de estas variables (ver plan de rediseño).
+ *
+ * Paleta oficial: #08080A · #1D1D22 · #B80C09 · #F94144 · #F8F9FA
+ * El rojo (--ft-primary) es un ACENTO, no un color dominante — se usa para
+ * CTA, navegación activa, progreso, PR y estados relevantes únicamente.
+ */
+
+:root {
+  // ---- Color — dark mode (personalidad principal de FitTrack) ----------
+  --ft-background: #08080a;
+  --ft-surface: #1d1d22;
+  --ft-surface-elevated: #26262d;
+  --ft-surface-sunken: #0f0f12;
+
+  --ft-primary: #f8f9fa;
+  --ft-primary-dark: #d6d7da;
+  --ft-primary-contrast: #08080a;
+  --ft-primary-soft: rgba(248, 249, 250, 0.12);
+
+  // ---- Notificaciones — único acento de color permitido en la app ------
+  --ft-notify: #f94144;
+  --ft-notify-dark: #b80c09;
+  --ft-notify-soft: rgba(249, 65, 68, 0.14);
+  --ft-notify-contrast: #f8f9fa;
+
+  --ft-text: #f8f9fa;
+  --ft-text-secondary: rgba(248, 249, 250, 0.64);
+  --ft-text-muted: rgba(248, 249, 250, 0.4);
+  --ft-text-on-primary: #f8f9fa;
+
+  --ft-border: rgba(248, 249, 250, 0.09);
+  --ft-border-strong: rgba(248, 249, 250, 0.16);
+
+  --ft-success: #34c77b;
+  --ft-success-soft: rgba(52, 199, 123, 0.14);
+  --ft-warning: #ffb648;
+  --ft-warning-soft: rgba(255, 182, 72, 0.14);
+  --ft-danger: #f94144;
+  --ft-danger-soft: rgba(249, 65, 68, 0.14);
+  --ft-info: #4d9de0;
+  --ft-info-soft: rgba(77, 157, 224, 0.14);
+
+  --ft-overlay: rgba(8, 8, 10, 0.6);
+
+  // ---- Chat ---------------------------------------------------------
+  --ft-bubble-in: var(--ft-surface);
+  --ft-bubble-out: var(--ft-primary);
+  --ft-bubble-out-text: var(--ft-primary-contrast);
+
+  // ---- Spacing --------------------------------------------------------
+  --ft-space-1: 4px;
+  --ft-space-2: 8px;
+  --ft-space-3: 12px;
+  --ft-space-4: 16px;
+  --ft-space-5: 20px;
+  --ft-space-6: 24px;
+  --ft-space-7: 32px;
+  --ft-space-8: 40px;
+
+  // ---- Radius -----------------------------------------------------------
+  --ft-radius-sm: 8px;
+  --ft-radius-md: 12px;
+  --ft-radius-lg: 16px;
+  --ft-radius-xl: 22px;
+  --ft-radius-pill: 999px;
+
+  // ---- Shadow (deliberadamente sutiles — sin sombras excesivas) --------
+  --ft-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --ft-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --ft-shadow-primary: 0 6px 20px rgba(8, 8, 10, 0.32);
+
+  // ---- Typography ---------------------------------------------------
+  --ft-font: "Poppins", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --ft-text-display: 700 2rem/1.15 var(--ft-font);
+  --ft-text-h1: 600 1.5rem/1.25 var(--ft-font);
+  --ft-text-h2: 600 1.2rem/1.3 var(--ft-font);
+  --ft-text-h3: 600 1rem/1.35 var(--ft-font);
+  --ft-text-body: 400 0.9rem/1.5 var(--ft-font);
+  --ft-text-body-sm: 400 0.82rem/1.45 var(--ft-font);
+  --ft-text-caption: 500 0.72rem/1.4 var(--ft-font);
+  --ft-text-stat: 700 1.6rem/1.1 var(--ft-font);
+
+  // ---- Motion -----------------------------------------------------------
+  --ft-transition-fast: 120ms ease;
+  --ft-transition: 200ms ease;
+
+  // ---- Z-index scale ------------------------------------------------
+  --ft-z-nav: 100;
+  --ft-z-header: 200;
+  --ft-z-overlay: 900;
+  --ft-z-modal: 1000;
+  --ft-z-toast: 1100;
+}
+
+/* ---- Light mode: misma jerarquía y componentes, solo cambia la superficie ---- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --ft-background: #f8f9fa;
+    --ft-surface: #ffffff;
+    --ft-surface-elevated: #ffffff;
+    --ft-surface-sunken: #eef0f2;
+
+    --ft-primary: #08080a;
+    --ft-primary-dark: #26262d;
+    --ft-primary-contrast: #f8f9fa;
+    --ft-primary-soft: rgba(8, 8, 10, 0.08);
+
+    --ft-text: #08080a;
+    --ft-text-secondary: rgba(8, 8, 10, 0.62);
+    --ft-text-muted: rgba(8, 8, 10, 0.4);
+
+    --ft-border: rgba(8, 8, 10, 0.09);
+    --ft-border-strong: rgba(8, 8, 10, 0.16);
+
+    --ft-overlay: rgba(8, 8, 10, 0.35);
+
+    --ft-shadow-sm: 0 1px 2px rgba(8, 8, 10, 0.06);
+    --ft-shadow-md: 0 4px 16px rgba(8, 8, 10, 0.08);
+    --ft-shadow-primary: 0 6px 20px rgba(8, 8, 10, 0.18);
+  }
+}
+
+/* Override manual explícito (por si en el futuro se agrega un toggle en la app) */
+:root[data-theme="light"] {
+  --ft-background: #f8f9fa;
+  --ft-surface: #ffffff;
+  --ft-surface-elevated: #ffffff;
+  --ft-surface-sunken: #eef0f2;
+  --ft-primary: #08080a;
+  --ft-primary-dark: #26262d;
+  --ft-primary-contrast: #f8f9fa;
+  --ft-primary-soft: rgba(8, 8, 10, 0.08);
+  --ft-text: #08080a;
+  --ft-text-secondary: rgba(8, 8, 10, 0.62);
+  --ft-text-muted: rgba(8, 8, 10, 0.4);
+  --ft-border: rgba(8, 8, 10, 0.09);
+  --ft-border-strong: rgba(8, 8, 10, 0.16);
+  --ft-overlay: rgba(8, 8, 10, 0.35);
+  --ft-shadow-sm: 0 1px 2px rgba(8, 8, 10, 0.06);
+  --ft-shadow-md: 0 4px 16px rgba(8, 8, 10, 0.08);
+  --ft-shadow-primary: 0 6px 20px rgba(8, 8, 10, 0.18);
+}

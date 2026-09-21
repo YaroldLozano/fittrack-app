@@ -1,0 +1,66 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>⚔️ Retos</h1>
+    <button class="btn-primary" (click)="showCreateForm = !showCreateForm">{{ showCreateForm ? 'Cancelar' : '+ Nuevo reto' }}</button>
+  </div>
+
+  <form class="create-form" *ngIf="showCreateForm" (ngSubmit)="create()">
+    <input type="text" name="title" [(ngModel)]="draft.title" placeholder="Título del reto" required />
+    <select name="type" [(ngModel)]="draft.type">
+      <option *ngFor="let t of typeOptions" [ngValue]="t">{{ t }}</option>
+    </select>
+    <select name="exercise_id" [(ngModel)]="draft.exercise_id" *ngIf="needsExercise()">
+      <option [ngValue]="null" disabled>Ejercicio...</option>
+      <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
+    </select>
+    <div class="measure-grid">
+      <input type="date" name="starts_at" [(ngModel)]="draft.starts_at" />
+      <input type="date" name="ends_at" [(ngModel)]="draft.ends_at" />
+    </div>
+
+    <span class="card-label">Invitar amigos</span>
+    <div class="filter-row">
+      <button
+        type="button"
+        class="btn-secondary"
+        *ngFor="let f of friends"
+        [class.active]="draft.participant_ids.includes(f.id)"
+        (click)="toggleParticipant(f.id)"
+      >
+        {{ f.username }}
+      </button>
+      <p class="empty" *ngIf="friends.length === 0">Agrega amigos primero para poder retarlos</p>
+    </div>
+
+    <p class="error" *ngIf="createError">{{ createError }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isCreating">{{ isCreating ? 'Creando...' : 'Crear reto' }}</button>
+  </form>
+
+  <div class="card-list">
+    <div class="item-card" *ngFor="let c of challenges">
+      <div class="item-card-header">
+        <h3>{{ c.title }}</h3>
+        <span class="status-badge" [ngClass]="c.status">{{ c.status }}</span>
+      </div>
+      <p class="equipment">{{ c.type }} · {{ c.starts_at }} → {{ c.ends_at }}</p>
+      <p class="tag" *ngIf="c.status === 'completed' && c.winner_user_id">
+        🏆 Ganador:
+        <ng-container *ngFor="let p of c.participants">
+          <span *ngIf="p.user_id === c.winner_user_id">{{ p.username }}</span>
+        </ng-container>
+      </p>
+      <div class="filter-row" *ngIf="isPending(c)">
+        <button class="btn-primary" (click)="accept(c.id)">Aceptar</button>
+        <button class="btn-secondary" (click)="decline(c.id)">Rechazar</button>
+      </div>
+      <table class="sets-table" *ngIf="!isPending(c)">
+        <tr *ngFor="let p of c.participants">
+          <td>{{ p.username }}</td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.progress_value }}</td>
+        </tr>
+      </table>
+    </div>
+    <p class="empty" *ngIf="!isLoading && challenges.length === 0">No tienes retos todavía. ¡Crea uno y desafía a un amigo!</p>
+  </div>
+</ion-content>

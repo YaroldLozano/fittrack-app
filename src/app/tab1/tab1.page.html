@@ -1,0 +1,144 @@
+<div class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <ion-icon name="flame"></ion-icon>
+      <span>FitTrack</span>
+    </div>
+
+    <ng-container *ngIf="mode === 'login'">
+      <h1>Bienvenido de nuevo</h1>
+      <p class="auth-sub">Inicia sesión para continuar tu progreso</p>
+
+      <form (ngSubmit)="onLogin()">
+        <div class="field">
+          <label for="username">Usuario</label>
+          <input id="username" type="text" name="username" [(ngModel)]="username" placeholder="tu_usuario" required />
+        </div>
+
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" name="password" [(ngModel)]="password" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" [disabled]="isLoggingIn">
+          {{ isLoggingIn ? 'Iniciando sesión…' : 'Iniciar sesión' }}
+        </button>
+
+        <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+      </form>
+
+      <div class="auth-links">
+        <a (click)="setMode('forgot')">Olvidé mi contraseña</a>
+        <a (click)="setMode('signup')">Crear cuenta</a>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="mode === 'signup'">
+      <h1>Crea tu cuenta</h1>
+      <p class="auth-sub">Empieza a registrar tu progreso hoy</p>
+
+      <form (ngSubmit)="onSignup()">
+        <div class="field">
+          <label for="signupUsername">Usuario</label>
+          <input
+            id="signupUsername"
+            type="text"
+            name="signupUsername"
+            [(ngModel)]="signupUsername"
+            placeholder="Elige un usuario"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="signupPassword">Contraseña</label>
+          <input
+            id="signupPassword"
+            type="password"
+            name="signupPassword"
+            [(ngModel)]="signupPassword"
+            placeholder="Mínimo 6 caracteres"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" [disabled]="isRegistering">
+          {{ isRegistering ? 'Creando cuenta…' : 'Crear cuenta' }}
+        </button>
+
+        <p *ngIf="signupError" class="error">{{ signupError }}</p>
+        <p *ngIf="signupSuccess" class="success">{{ signupSuccess }}</p>
+      </form>
+
+      <div class="auth-links">
+        <a (click)="setMode('login')">Volver a iniciar sesión</a>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="mode === 'forgot'">
+      <h1>Recuperar contraseña</h1>
+      <p class="auth-sub">Te enviaremos un código a tu correo registrado</p>
+
+      <form *ngIf="!forgotRequested" (ngSubmit)="onRequestReset()">
+        <div class="field">
+          <label for="forgotIdentifier">Usuario o correo</label>
+          <input
+            id="forgotIdentifier"
+            type="text"
+            name="forgotIdentifier"
+            [(ngModel)]="forgotIdentifier"
+            placeholder="tu_usuario o correo"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" [disabled]="isRequestingReset">
+          {{ isRequestingReset ? 'Enviando…' : 'Enviar código' }}
+        </button>
+
+        <p *ngIf="forgotError" class="error">{{ forgotError }}</p>
+      </form>
+
+      <form *ngIf="forgotRequested" (ngSubmit)="onResetPassword()">
+        <p class="info-message">{{ forgotInfoMessage }}</p>
+
+        <div class="field">
+          <label for="forgotTokenInput">Código recibido por correo</label>
+          <input
+            id="forgotTokenInput"
+            type="text"
+            name="forgotTokenInput"
+            [(ngModel)]="forgotTokenInput"
+            placeholder="Código"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="forgotNewPassword">Nueva contraseña</label>
+          <input
+            id="forgotNewPassword"
+            type="password"
+            name="forgotNewPassword"
+            [(ngModel)]="forgotNewPassword"
+            placeholder="Mínimo 6 caracteres"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit" [disabled]="isResettingPassword">
+          {{ isResettingPassword ? 'Actualizando…' : 'Restablecer contraseña' }}
+        </button>
+
+        <p *ngIf="forgotResetError" class="error">{{ forgotResetError }}</p>
+        <p *ngIf="forgotResetSuccess" class="success">{{ forgotResetSuccess }}</p>
+      </form>
+
+      <div class="auth-links">
+        <a (click)="setMode('login')">Volver a iniciar sesión</a>
+      </div>
+    </ng-container>
+  </div>
+</div>

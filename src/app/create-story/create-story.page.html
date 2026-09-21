@@ -1,0 +1,40 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Historia</h1>
+    <button class="btn-secondary" (click)="cancel()">Cancelar</button>
+  </div>
+
+  <div class="create-story-form">
+    <label class="picker" *ngIf="!previewUrl">
+      <ion-icon name="image-outline"></ion-icon>
+      <span>Toca para elegir foto o video</span>
+      <input type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" />
+    </label>
+
+    <div class="preview" *ngIf="previewUrl">
+      <img *ngIf="!isVideo" [src]="previewUrl" alt="" />
+      <video *ngIf="isVideo" [src]="previewUrl" muted controls></video>
+      <div class="preview-overlay" *ngIf="isUploading">Subiendo…</div>
+      <label class="change-btn">
+        Cambiar
+        <input type="file" accept="image/*,video/*" hidden (change)="onFileSelected($event)" />
+      </label>
+    </div>
+
+    <textarea [(ngModel)]="caption" placeholder="Agregar texto (opcional)" rows="2" maxlength="200"></textarea>
+
+    <div class="visibility-row">
+      <span class="field-label">Visibilidad</span>
+      <div class="filter-row">
+        <button class="btn-secondary" [class.active]="visibility === 'friends'" (click)="visibility = 'friends'">Amigos</button>
+        <button class="btn-secondary" [class.active]="visibility === 'public'" (click)="visibility = 'public'">Público</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <button class="btn-primary publish-btn" [disabled]="!canPublish" (click)="publish()">
+      {{ isPublishing ? 'Publicando…' : 'Publicar historia' }}
+    </button>
+  </div>
+</ion-content>

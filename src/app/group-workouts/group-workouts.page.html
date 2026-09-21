@@ -1,0 +1,51 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>🤝 Entrenar juntos</h1>
+    <button class="btn-primary" (click)="showCreateForm = !showCreateForm">{{ showCreateForm ? 'Cancelar' : '+ Nuevo' }}</button>
+  </div>
+
+  <form class="create-form" *ngIf="showCreateForm" (ngSubmit)="create()">
+    <input type="text" name="name" [(ngModel)]="draft.name" placeholder="Nombre (ej. Pecho + Tríceps)" required />
+    <div class="measure-grid">
+      <input type="date" name="scheduled_date" [(ngModel)]="draft.scheduled_date" />
+      <input type="time" name="scheduled_time" [(ngModel)]="draft.scheduled_time" />
+    </div>
+
+    <span class="card-label">Invitar amigos</span>
+    <div class="filter-row">
+      <button
+        type="button"
+        class="btn-secondary"
+        *ngFor="let f of friends"
+        [class.active]="draft.participant_ids.includes(f.id)"
+        (click)="toggleParticipant(f.id)"
+      >
+        {{ f.username }}
+      </button>
+      <p class="empty" *ngIf="friends.length === 0">Agrega amigos primero</p>
+    </div>
+
+    <p class="error" *ngIf="createError">{{ createError }}</p>
+    <button type="submit" class="btn-primary" [disabled]="isCreating">{{ isCreating ? 'Creando...' : 'Crear' }}</button>
+  </form>
+
+  <div class="card-list">
+    <div class="item-card" *ngFor="let gw of groupWorkouts">
+      <div class="item-card-header">
+        <h3>{{ gw.name }}</h3>
+        <span class="status-badge" [ngClass]="gw.status">{{ gw.status }}</span>
+      </div>
+      <p class="equipment">{{ gw.scheduled_date }} {{ gw.scheduled_time }}</p>
+      <p class="tag" *ngFor="let p of gw.participants">{{ p.username }}: {{ p.status }}</p>
+
+      <div class="filter-row" *ngIf="isPending(gw)">
+        <button class="btn-primary" (click)="respond(gw.id, true)">Aceptar</button>
+        <button class="btn-secondary" (click)="respond(gw.id, false)">Rechazar</button>
+      </div>
+      <button class="btn-secondary" *ngIf="!isPending(gw) && gw.status === 'scheduled'" (click)="complete(gw.id)">Finalizar</button>
+    </div>
+    <p class="empty" *ngIf="!isLoading && groupWorkouts.length === 0">
+      Aún no tienes entrenamientos grupales. ¡Invita a un amigo a entrenar!
+    </p>
+  </div>
+</ion-content>
