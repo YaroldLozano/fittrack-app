@@ -4,6 +4,7 @@ import { AiService } from '../core/services/ai.service';
 import { WorkoutService } from '../core/services/workout.service';
 import { AiWorkoutSuggestion } from '../core/models/ai.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 @Component({
   selector: 'app-ai-coach',
@@ -36,9 +37,8 @@ export class AiCoachPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const today = new Date().toISOString().slice(0, 10);
-    this.workoutService.list(today, today).subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.list(today(), today()).subscribe({
+      next: withCd(this.cdr, (res) => {
         const active = res.workouts.find((w) => w.status !== 'completed');
         this.todayExercisesContext = (active?.exercises ?? []).map((e) => ({
           exercise_id: e.exercise_id,
@@ -46,8 +46,9 @@ export class AiCoachPage implements OnInit {
           sets: e.planned_sets,
           reps: e.planned_reps,
         }));
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   useQuickPrompt(text: string): void {
@@ -77,12 +78,11 @@ export class AiCoachPage implements OnInit {
     if (!this.suggestion || this.isApplying) return;
 
     this.isApplying = true;
-    const today = new Date().toISOString().slice(0, 10);
 
     this.workoutService
       .create({
         name: this.suggestion.name,
-        scheduled_date: today,
+        scheduled_date: today(),
         exercises: this.suggestion.exercises.map((e) => ({
           exercise_id: e.exercise_id,
           sets: e.sets,

@@ -77,13 +77,15 @@ export class ShellPage implements OnInit {
   ngOnInit(): void {
     const myId = this.authService.currentUserValue?.id;
     if (myId) {
-      this.friendService.profile(myId).subscribe(
-        withCd(this.cdr, (res) => (this.myAvatarMediaId = res.profile.avatar_media_id))
-      );
+      this.friendService.profile(myId).subscribe({
+        next: withCd(this.cdr, (res) => (this.myAvatarMediaId = res.profile.avatar_media_id)),
+        error: withCd(this.cdr, (err) => console.error(err)),
+      });
     }
-    this.notificationService.list().subscribe(
-      withCd(this.cdr, (res) => (this.unreadNotifications = res.unread_count))
-    );
+    this.notificationService.list().subscribe({
+      next: withCd(this.cdr, (res) => (this.unreadNotifications = res.unread_count)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   toggleMenu(): void {

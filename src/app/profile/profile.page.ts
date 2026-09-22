@@ -13,6 +13,7 @@ import { User } from '../core/models/user.model';
 import { MyGamification } from '../core/models/gamification.model';
 import { Post } from '../core/models/post.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 @Component({
   selector: 'app-profile',
@@ -54,7 +55,7 @@ export class ProfilePage implements OnInit {
     leg: number | null;
     hip: number | null;
   } = {
-    recorded_date: new Date().toISOString().slice(0, 10),
+    recorded_date: today(),
     weight: null,
     height: null,
     body_fat_percentage: null,

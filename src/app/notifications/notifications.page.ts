@@ -22,12 +22,16 @@ export class NotificationsPage implements OnInit {
 
   private load(): void {
     this.isLoading = true;
-    this.notificationService.list().subscribe(
-      withCd(this.cdr, (res) => {
+    this.notificationService.list().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.notifications = res.notifications;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   text(n: AppNotification): string {
@@ -56,9 +60,10 @@ export class NotificationsPage implements OnInit {
   }
 
   markAllRead(): void {
-    this.notificationService.markAllRead().subscribe(
-      withCd(this.cdr, () => this.notifications.forEach((n) => (n.is_read = true)))
-    );
+    this.notificationService.markAllRead().subscribe({
+      next: withCd(this.cdr, () => this.notifications.forEach((n) => (n.is_read = true))),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   get hasUnread(): boolean {

@@ -38,8 +38,14 @@ export class ProgressPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.progressService.general().subscribe(withCd(this.cdr, (res) => (this.general = res.progress)));
-    this.exerciseService.list().subscribe(withCd(this.cdr, (res) => (this.exercises = res.exercises)));
+    this.progressService.general().subscribe({
+      next: withCd(this.cdr, (res) => (this.general = res.progress)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
+    this.exerciseService.list().subscribe({
+      next: withCd(this.cdr, (res) => (this.exercises = res.exercises)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   onSelectExercise(): void {
@@ -48,8 +54,8 @@ export class ProgressPage implements OnInit {
       return;
     }
 
-    this.progressService.forExercise(this.selectedExerciseId).subscribe(
-      withCd(this.cdr, (res) => {
+    this.progressService.forExercise(this.selectedExerciseId).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.exerciseProgress = res.progress;
         this.chartData = {
           labels: res.progress.evolution.map((p) => p.date),
@@ -64,7 +70,8 @@ export class ProgressPage implements OnInit {
             },
           ],
         };
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 }

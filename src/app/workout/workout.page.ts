@@ -5,6 +5,7 @@ import { ExerciseService } from '../core/services/exercise.service';
 import { WorkoutSession } from '../core/models/workout.model';
 import { Exercise } from '../core/models/exercise.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 @Component({
   selector: 'app-workout',
@@ -34,7 +35,10 @@ export class WorkoutPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.exerciseService.list().subscribe(withCd(this.cdr, (res) => (this.exercises = res.exercises)));
+    this.exerciseService.list().subscribe({
+      next: withCd(this.cdr, (res) => (this.exercises = res.exercises)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
 
     const id = this.route.snapshot.queryParamMap.get('id');
     if (id) {
@@ -45,23 +49,30 @@ export class WorkoutPage implements OnInit {
   }
 
   private loadTodaysWorkouts(): void {
-    const today = new Date().toISOString().slice(0, 10);
-    this.workoutService.list(today, today).subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.list(today(), today()).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.todaysWorkouts = res.workouts.filter((w) => w.status !== 'completed');
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   loadSession(id: number): void {
     this.isLoading = true;
-    this.workoutService.get(id).subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.get(id).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.session = res.workout;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   openSession(session: WorkoutSession): void {
@@ -71,27 +82,34 @@ export class WorkoutPage implements OnInit {
 
   createQuickWorkout(): void {
     this.isCreating = true;
-    const today = new Date().toISOString().slice(0, 10);
-    this.workoutService.create({ name: 'Entrenamiento libre', scheduled_date: today }).subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.create({ name: 'Entrenamiento libre', scheduled_date: today() }).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isCreating = false;
         this.openSession(res.workout);
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isCreating = false;
+        console.error(err);
+      }),
+    });
   }
 
   start(): void {
     if (!this.session) return;
-    this.workoutService.start(this.session.id).subscribe(withCd(this.cdr, (res) => (this.session = res.workout)));
+    this.workoutService.start(this.session.id).subscribe({
+      next: withCd(this.cdr, (res) => (this.session = res.workout)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   complete(): void {
     if (!this.session) return;
-    this.workoutService.complete(this.session.id).subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.complete(this.session.id).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.session = res.workout;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   backToList(): void {
@@ -119,12 +137,13 @@ export class WorkoutPage implements OnInit {
 
     this.workoutService
       .addSet(this.session.id, { exercise_id: exerciseId, reps: draft.reps, weight: draft.weight })
-      .subscribe(
-        withCd(this.cdr, (res) => {
+      .subscribe({
+        next: withCd(this.cdr, (res) => {
           this.session = res.workout;
           this.pendingExerciseIds = this.pendingExerciseIds.filter((id) => id !== exerciseId);
-        })
-      );
+        }),
+        error: withCd(this.cdr, (err) => console.error(err)),
+      });
   }
 
   pendingExercises(): Exercise[] {

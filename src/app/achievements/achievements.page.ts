@@ -20,12 +20,16 @@ export class AchievementsPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.achievementService.me().subscribe(
-      withCd(this.cdr, (res) => {
+    this.achievementService.me().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.unlocked = res.unlocked;
         this.locked = res.locked;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 }

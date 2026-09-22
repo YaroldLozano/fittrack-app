@@ -4,6 +4,7 @@ import { FriendService } from '../core/services/friend.service';
 import { GroupWorkout } from '../core/models/group-workout.model';
 import { Friend } from '../core/models/friend.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 @Component({
   selector: 'app-group-workouts',
@@ -22,7 +23,7 @@ export class GroupWorkoutsPage implements OnInit {
 
   draft: { name: string; scheduled_date: string; scheduled_time: string; participant_ids: number[] } = {
     name: '',
-    scheduled_date: new Date().toISOString().slice(0, 10),
+    scheduled_date: today(),
     scheduled_time: '18:00',
     participant_ids: [],
   };

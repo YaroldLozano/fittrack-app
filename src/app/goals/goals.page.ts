@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { GoalService } from '../core/services/goal.service';
 import { ExerciseService } from '../core/services/exercise.service';
 import { Goal, GoalType } from '../core/models/goal.model';
@@ -47,7 +48,8 @@ export class GoalsPage implements OnInit {
   constructor(
     private goalService: GoalService,
     private exerciseService: ExerciseService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +102,24 @@ export class GoalsPage implements OnInit {
     this.goalService.update(goal.id, { status: 'completed' }).subscribe(withCd(this.cdr, () => this.loadGoals()));
   }
 
-  remove(goal: Goal): void {
-    this.goalService.delete(goal.id).subscribe(withCd(this.cdr, () => this.loadGoals()));
+  async remove(goal: Goal): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar objetivo',
+      message: '¿Eliminar este objetivo? Esta acción no se puede deshacer.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.goalService.delete(goal.id).subscribe({
+              next: withCd(this.cdr, () => this.loadGoals()),
+              error: withCd(this.cdr, (err) => console.error(err)),
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }

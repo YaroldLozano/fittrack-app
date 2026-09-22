@@ -41,14 +41,21 @@ export class FeedPage implements OnInit {
 
   private load(): void {
     this.isLoading = true;
-    this.storyService.listActive().subscribe(withCd(this.cdr, (res) => (this.storyGroups = res.groups)));
-    this.postService.feed().subscribe(
-      withCd(this.cdr, (res) => {
+    this.storyService.listActive().subscribe({
+      next: withCd(this.cdr, (res) => (this.storyGroups = res.groups)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
+    this.postService.feed().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.posts = res.posts;
         this.hasMore = res.has_more;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   loadMore(): void {
@@ -57,13 +64,17 @@ export class FeedPage implements OnInit {
     }
     this.isLoadingMore = true;
     const oldestId = this.posts[this.posts.length - 1].id;
-    this.postService.feed(oldestId).subscribe(
-      withCd(this.cdr, (res) => {
+    this.postService.feed(oldestId).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoadingMore = false;
         this.posts = [...this.posts, ...res.posts];
         this.hasMore = res.has_more;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoadingMore = false;
+        console.error(err);
+      }),
+    });
   }
 
   get myStoryGroup(): StoryGroup | undefined {

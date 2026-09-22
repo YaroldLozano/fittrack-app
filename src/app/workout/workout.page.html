@@ -64,8 +64,8 @@
       </table>
 
       <div class="set-input-row" *ngIf="session.status === 'in_progress'">
-        <input type="number" [(ngModel)]="draftFor(ex.exercise_id).reps" placeholder="Reps" />
-        <input type="number" [(ngModel)]="draftFor(ex.exercise_id).weight" placeholder="Peso (kg)" />
+        <input type="number" min="0" [(ngModel)]="draftFor(ex.exercise_id).reps" placeholder="Reps" />
+        <input type="number" min="0" [(ngModel)]="draftFor(ex.exercise_id).weight" placeholder="Peso (kg)" />
         <button class="btn-secondary" (click)="logSet(ex.exercise_id)">+ Serie</button>
       </div>
     </div>
@@ -77,8 +77,8 @@
       </div>
 
       <div class="set-input-row" *ngIf="session.status === 'in_progress'">
-        <input type="number" [(ngModel)]="draftFor(ex.id).reps" placeholder="Reps" />
-        <input type="number" [(ngModel)]="draftFor(ex.id).weight" placeholder="Peso (kg)" />
+        <input type="number" min="0" [(ngModel)]="draftFor(ex.id).reps" placeholder="Reps" />
+        <input type="number" min="0" [(ngModel)]="draftFor(ex.id).weight" placeholder="Peso (kg)" />
         <button class="btn-secondary" (click)="logSet(ex.id)">+ Serie</button>
       </div>
     </div>

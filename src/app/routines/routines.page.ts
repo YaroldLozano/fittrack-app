@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
 import { RoutineService } from '../core/services/routine.service';
 import { ExerciseService } from '../core/services/exercise.service';
 import { Routine, RoutineDay } from '../core/models/routine.model';
 import { Exercise } from '../core/models/exercise.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 import { ROUTINE_TEMPLATES, RoutineTemplate } from './routine-templates';
 
 export const DAY_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -33,7 +35,8 @@ export class RoutinesPage implements OnInit {
     private routineService: RoutineService,
     private exerciseService: ExerciseService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private alertCtrl: AlertController
   ) {
     this.form = this.buildRoutineForm();
   }
@@ -60,7 +63,7 @@ export class RoutinesPage implements OnInit {
       name: ['', Validators.required],
       description: [''],
       goal: [''],
-      start_date: [new Date().toISOString().slice(0, 10)],
+      start_date: [today()],
       end_date: [''],
       status: ['active'],
       days: this.fb.array([]),
@@ -157,7 +160,7 @@ export class RoutinesPage implements OnInit {
       name: [template.name, Validators.required],
       description: [template.description],
       goal: [template.goal],
-      start_date: [new Date().toISOString().slice(0, 10)],
+      start_date: [today()],
       end_date: [''],
       status: ['active'],
       days: this.fb.array(days.map((d) => this.buildDayGroup(d))),
@@ -206,8 +209,25 @@ export class RoutinesPage implements OnInit {
     this.routineService.duplicate(routine.id).subscribe(withCd(this.cdr, () => this.loadRoutines()));
   }
 
-  remove(routine: Routine): void {
-    this.routineService.delete(routine.id).subscribe(withCd(this.cdr, () => this.loadRoutines()));
+  async remove(routine: Routine): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar rutina',
+      message: '¿Eliminar esta rutina? Esta acción no se puede deshacer.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.routineService.delete(routine.id).subscribe({
+              next: withCd(this.cdr, () => this.loadRoutines()),
+              error: withCd(this.cdr, (err) => console.error(err)),
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   exerciseName(id: number): string {

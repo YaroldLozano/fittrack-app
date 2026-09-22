@@ -38,8 +38,8 @@ export class StoryViewerPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authorId = Number(this.route.snapshot.paramMap.get('userId'));
-    this.storyService.listActive().subscribe(
-      withCd(this.cdr, (res) => {
+    this.storyService.listActive().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.group = res.groups.find((g) => g.author.id === this.authorId) ?? null;
         this.isMine = this.authorId === this.myUserId;
@@ -48,8 +48,12 @@ export class StoryViewerPage implements OnInit, OnDestroy {
           return;
         }
         this.playCurrent();
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   ngOnDestroy(): void {
@@ -133,7 +137,10 @@ export class StoryViewerPage implements OnInit, OnDestroy {
     this.showViewers = !this.showViewers;
     if (this.showViewers && this.current) {
       this.stopTimer();
-      this.storyService.viewers(this.current.id).subscribe(withCd(this.cdr, (res) => (this.viewers = res.viewers)));
+      this.storyService.viewers(this.current.id).subscribe({
+        next: withCd(this.cdr, (res) => (this.viewers = res.viewers)),
+        error: withCd(this.cdr, (err) => console.error(err)),
+      });
     } else {
       this.playCurrent();
     }
@@ -143,6 +150,9 @@ export class StoryViewerPage implements OnInit, OnDestroy {
     if (!this.current) {
       return;
     }
-    this.storyService.delete(this.current.id).subscribe(withCd(this.cdr, () => this.close()));
+    this.storyService.delete(this.current.id).subscribe({
+      next: withCd(this.cdr, () => this.close()),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 }

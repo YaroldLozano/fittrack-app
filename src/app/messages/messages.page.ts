@@ -34,17 +34,22 @@ export class MessagesPage implements OnInit {
 
   private load(): void {
     this.isLoading = true;
-    this.chatService.getConversations().subscribe(
-      withCd(this.cdr, (res) => {
+    this.chatService.getConversations().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.conversations = res.conversations;
         if (this.conversations.length === 0) {
-          this.friendService.list().subscribe(
-            withCd(this.cdr, (friendsRes) => (this.hasFriends = friendsRes.friends.length > 0))
-          );
+          this.friendService.list().subscribe({
+            next: withCd(this.cdr, (friendsRes) => (this.hasFriends = friendsRes.friends.length > 0)),
+            error: withCd(this.cdr, (err) => console.error(err)),
+          });
         }
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
   }
 
   get filtered(): Conversation[] {

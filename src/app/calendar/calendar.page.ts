@@ -5,6 +5,7 @@ import { RoutineService } from '../core/services/routine.service';
 import { WorkoutSession } from '../core/models/workout.model';
 import { Routine } from '../core/models/routine.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 interface CalendarCell {
   date: string; // YYYY-MM-DD
@@ -40,12 +41,13 @@ export class CalendarPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.routineService.list().subscribe(
-      withCd(this.cdr, (res) => {
+    this.routineService.list().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.activeRoutine = res.routines.find((r) => r.status === 'active') ?? null;
         this.buildMonth();
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   get monthLabel(): string {
@@ -73,9 +75,9 @@ export class CalendarPage implements OnInit {
     gridEnd.setDate(gridStart.getDate() + totalCells - 1);
     const to = this.toDateString(gridEnd);
 
-    this.workoutService.list(from, to).subscribe(
-      withCd(this.cdr, (res) => {
-        const todayStr = this.toDateString(new Date());
+    this.workoutService.list(from, to).subscribe({
+      next: withCd(this.cdr, (res) => {
+        const todayStr = today();
         const cells: CalendarCell[] = [];
 
         for (let i = 0; i < totalCells; i++) {
@@ -94,8 +96,9 @@ export class CalendarPage implements OnInit {
         }
 
         this.cells = cells;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   private isRoutineRestDay(dateStr: string, jsDay: number): boolean {
@@ -124,13 +127,17 @@ export class CalendarPage implements OnInit {
     if (!this.selectedDate || !this.newWorkoutName) return;
 
     this.isCreating = true;
-    this.workoutService.create({ name: this.newWorkoutName, scheduled_date: this.selectedDate }).subscribe(
-      withCd(this.cdr, () => {
+    this.workoutService.create({ name: this.newWorkoutName, scheduled_date: this.selectedDate }).subscribe({
+      next: withCd(this.cdr, () => {
         this.isCreating = false;
         this.newWorkoutName = '';
         this.buildMonth();
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isCreating = false;
+        console.error(err);
+      }),
+    });
   }
 
   openWorkout(workout: WorkoutSession): void {

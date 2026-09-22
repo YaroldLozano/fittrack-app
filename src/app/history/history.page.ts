@@ -16,17 +16,21 @@ export class HistoryPage implements OnInit {
   constructor(private workoutService: WorkoutService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.workoutService.list().subscribe(
-      withCd(this.cdr, (res) => {
+    this.workoutService.list().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.completedWorkouts = res.workouts
           .filter((w) => w.status === 'completed')
           .sort((a, b) => b.scheduled_date.localeCompare(a.scheduled_date));
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   open(workout: WorkoutSession): void {
-    this.workoutService.get(workout.id).subscribe(withCd(this.cdr, (res) => (this.selected = res.workout)));
+    this.workoutService.get(workout.id).subscribe({
+      next: withCd(this.cdr, (res) => (this.selected = res.workout)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   close(): void {

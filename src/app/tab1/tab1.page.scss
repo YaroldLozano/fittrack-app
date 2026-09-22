@@ -110,10 +110,15 @@ form {
   justify-content: space-between;
   margin-top: var(--ft-space-5);
 
-  a {
+  a,
+  button {
+    background: none;
+    border: none;
+    padding: 0;
     color: var(--ft-text-secondary);
     text-decoration: none;
     font-size: 0.85em;
+    font-family: inherit;
     cursor: pointer;
     transition: color var(--ft-transition-fast);
 

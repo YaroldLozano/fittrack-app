@@ -16,7 +16,7 @@
       <option *ngFor="let ex of exercises" [ngValue]="ex.id">{{ ex.name }}</option>
     </select>
     <div class="target-row">
-      <input type="number" name="target_value" [(ngModel)]="newGoal.target_value" placeholder="Meta (número)" />
+      <input type="number" min="0" name="target_value" [(ngModel)]="newGoal.target_value" placeholder="Meta (número)" />
       <input type="text" name="unit" [(ngModel)]="newGoal.unit" placeholder="Unidad (kg, veces...)" />
     </div>
     <label class="date-label">Fecha objetivo (opcional)

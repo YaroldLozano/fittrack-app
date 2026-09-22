@@ -7,6 +7,7 @@ import { Challenge, ChallengeType } from '../core/models/challenge.model';
 import { Friend } from '../core/models/friend.model';
 import { Exercise } from '../core/models/exercise.model';
 import { withCd } from '../core/utils/with-cd';
+import { today } from '../core/utils/date.util';
 
 @Component({
   selector: 'app-challenges',
@@ -31,7 +32,7 @@ export class ChallengesPage implements OnInit {
     title: '',
     type: 'consistency',
     exercise_id: null,
-    starts_at: new Date().toISOString().slice(0, 10),
+    starts_at: today(),
     ends_at: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
     participant_ids: [],
   };

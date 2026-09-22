@@ -70,30 +70,39 @@ export class RankingPage implements OnInit {
 
   private loadSummary(): void {
     this.isLoading = true;
-    this.rankingService.me().subscribe(
-      withCd(this.cdr, (res) => {
+    this.rankingService.me().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.isLoading = false;
         this.me = res.me;
-      })
-    );
-    this.achievementService.me().subscribe(
-      withCd(this.cdr, (res) => {
+      }),
+      error: withCd(this.cdr, (err) => {
+        this.isLoading = false;
+        console.error(err);
+      }),
+    });
+    this.achievementService.me().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.recentAchievements = [...res.unlocked].slice(0, 3);
         this.nextUnlocks = [...res.locked]
           .filter((a) => (a.current_value ?? 0) > 0)
           .sort((a, b) => (b.current_value ?? 0) / b.requirement_value - (a.current_value ?? 0) / a.requirement_value)
           .slice(0, 3);
-      })
-    );
-    this.challengeService.list().subscribe(
-      withCd(this.cdr, (res) => {
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
+    this.challengeService.list().subscribe({
+      next: withCd(this.cdr, (res) => {
         this.activeChallenges = res.challenges.filter((c) => c.status === 'active' || c.status === 'pending');
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   loadFriends(): void {
-    this.rankingService.friends().subscribe(withCd(this.cdr, (res) => (this.friendsEntries = res.ranking.entries)));
+    this.rankingService.friends().subscribe({
+      next: withCd(this.cdr, (res) => (this.friendsEntries = res.ranking.entries)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   setGlobalMode(mode: 'page' | 'nearby'): void {
@@ -103,12 +112,13 @@ export class RankingPage implements OnInit {
   }
 
   loadGlobal(): void {
-    this.rankingService.global(this.globalMode, this.globalPageNum).subscribe(
-      withCd(this.cdr, (res) => {
+    this.rankingService.global(this.globalMode, this.globalPageNum).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.globalEntries = res.ranking.entries;
         this.globalTotal = res.ranking.total;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   nextGlobalPage(): void {
@@ -129,12 +139,13 @@ export class RankingPage implements OnInit {
   }
 
   loadWeekly(): void {
-    this.rankingService.weekly(this.weeklyScope).subscribe(
-      withCd(this.cdr, (res) => {
+    this.rankingService.weekly(this.weeklyScope).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.weeklyEntries = res.ranking.entries;
         this.weeklySecondsRemaining = res.ranking.seconds_remaining;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   setSeasonScope(scope: 'global' | 'friends'): void {
@@ -143,16 +154,20 @@ export class RankingPage implements OnInit {
   }
 
   loadSeason(): void {
-    this.rankingService.season(this.seasonScope).subscribe(
-      withCd(this.cdr, (res) => {
+    this.rankingService.season(this.seasonScope).subscribe({
+      next: withCd(this.cdr, (res) => {
         this.seasonEntries = res.ranking.entries;
         this.seasonName = res.ranking.season.name;
-      })
-    );
+      }),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   private loadExerciseTab(): void {
-    this.exerciseService.list().subscribe(withCd(this.cdr, (res) => (this.exercises = res.exercises)));
+    this.exerciseService.list().subscribe({
+      next: withCd(this.cdr, (res) => (this.exercises = res.exercises)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   onExerciseSelected(): void {
@@ -167,9 +182,10 @@ export class RankingPage implements OnInit {
 
   private loadExerciseRanking(): void {
     if (!this.selectedExerciseId) return;
-    this.rankingService
-      .byExercise(this.selectedExerciseId, this.exerciseScope)
-      .subscribe(withCd(this.cdr, (res) => (this.exerciseEntries = res.ranking.entries)));
+    this.rankingService.byExercise(this.selectedExerciseId, this.exerciseScope).subscribe({
+      next: withCd(this.cdr, (res) => (this.exerciseEntries = res.ranking.entries)),
+      error: withCd(this.cdr, (err) => console.error(err)),
+    });
   }
 
   formatDuration(seconds: number): string {

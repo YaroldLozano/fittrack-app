@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { ExerciseService } from '../core/services/exercise.service';
 import { AuthService } from '../core/services/auth.service';
 import { DifficultyLevel, Exercise, MuscleGroup } from '../core/models/exercise.model';
@@ -31,7 +32,8 @@ export class ExercisesPage implements OnInit {
   constructor(
     private exerciseService: ExerciseService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private alertCtrl: AlertController
   ) {
     this.currentUserId = this.authService.currentUserValue?.id ?? null;
   }
@@ -89,8 +91,25 @@ export class ExercisesPage implements OnInit {
       });
   }
 
-  onDelete(exercise: Exercise): void {
-    this.exerciseService.delete(exercise.id).subscribe(withCd(this.cdr, () => this.loadExercises()));
+  async onDelete(exercise: Exercise): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar ejercicio',
+      message: '¿Eliminar este ejercicio? Esta acción no se puede deshacer.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.exerciseService.delete(exercise.id).subscribe({
+              next: withCd(this.cdr, () => this.loadExercises()),
+              error: withCd(this.cdr, (err) => console.error(err)),
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   isOwn(exercise: Exercise): boolean {
