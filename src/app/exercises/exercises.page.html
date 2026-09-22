@@ -1,7 +1,39 @@
 <ion-content class="page">
   <div class="page-header">
     <h1>Ejercicios</h1>
-    <button class="btn-primary" (click)="toggleForm()">{{ showForm ? 'Cancelar' : '+ Nuevo ejercicio' }}</button>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="toggleExternal()">{{ showExternal ? 'Cerrar catálogo externo' : 'Explorar catálogo externo' }}</button>
+      <button class="btn-primary" (click)="toggleForm()">{{ showForm ? 'Cancelar' : '+ Nuevo ejercicio' }}</button>
+    </div>
+  </div>
+
+  <div class="external-panel" *ngIf="showExternal">
+    <p class="hint">Catálogo público de <a href="https://wger.de" target="_blank" rel="noopener">wger.de</a> (vía la API del backend) — buscá un ejercicio e importalo a tu catálogo.</p>
+
+    <div class="external-search-row">
+      <select [(ngModel)]="externalCategoryId">
+        <option [ngValue]="null">Todas las categorías</option>
+        <option *ngFor="let c of externalCategories" [ngValue]="c.id">{{ c.name }}</option>
+      </select>
+      <input type="text" [(ngModel)]="externalQuery" placeholder="Buscar por nombre (ej. bench, squat)" (keyup.enter)="searchExternal()" />
+      <button class="btn-primary" (click)="searchExternal()" [disabled]="externalLoading">{{ externalLoading ? 'Buscando...' : 'Buscar' }}</button>
+    </div>
+
+    <p class="error" *ngIf="externalError">{{ externalError }}</p>
+
+    <div class="exercise-grid" *ngIf="externalResults.length > 0">
+      <div class="exercise-card external-card" *ngFor="let ext of externalResults">
+        <img *ngIf="ext.image_url" [src]="ext.image_url" [alt]="ext.name" class="external-image" />
+        <div class="exercise-card-header">
+          <h3>{{ ext.name }}</h3>
+        </div>
+        <span class="tag" *ngIf="ext.category">{{ ext.category }}</span>
+        <p class="equipment" *ngIf="ext.equipment.length">{{ ext.equipment.join(', ') }}</p>
+        <p class="equipment" *ngIf="ext.description">{{ ext.description }}</p>
+        <button class="btn-secondary" (click)="importFromExternal(ext)">Importar a mi catálogo</button>
+      </div>
+    </div>
+    <p class="empty" *ngIf="!externalLoading && externalResults.length === 0">Elegí una categoría o buscá un nombre para ver resultados.</p>
   </div>
 
   <form class="create-form" *ngIf="showForm" (ngSubmit)="onCreate()">

@@ -83,6 +83,10 @@ Ver capturas de estas y otras vistas en [`screenshots/`](screenshots/).
   al dispositivo** (Ionic Storage) para datos que no pasan por el
   backend: notas de entrenamiento, con alta/consulta/modificación/
   eliminación que sobreviven a cerrar y reabrir la app.
+- [`docs/api-externa-ejercicios.md`](docs/api-externa-ejercicios.md) —
+  consumo de una **API REST externa** (wger.de) desde el backend PHP para
+  explorar un catálogo de ejercicios más amplio e importarlo (adaptado)
+  al catálogo propio del usuario.
 
 ## Capturas de ejecución
 
@@ -112,3 +116,6 @@ verificar la vista móvil real de la app.
 - [`docs/prompts-ia-persistencia.md`](docs/prompts-ia-persistencia.md) —
   mismo tipo de explicación, específica para la persistencia local
   (Ionic Storage).
+- [`docs/prompts-ia-api-externa.md`](docs/prompts-ia-api-externa.md) —
+  mismo tipo de explicación, específica para el consumo de la API externa
+  de ejercicios (wger.de).

@@ -1,2 +1,57 @@
 // Layout/styling for this page comes mostly from the shared classes in global.scss
 // (.page, .page-header, .create-form, .exercise-grid, .exercise-card, .tag, .btn-primary).
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ft-space-3);
+}
+
+.external-panel {
+  margin: var(--ft-space-3) var(--ft-space-5) var(--ft-space-5);
+  padding: var(--ft-space-5);
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-3);
+
+  .hint {
+    margin: 0;
+    font: var(--ft-text-body-sm);
+    color: var(--ft-text-secondary);
+  }
+
+  .error {
+    margin: 0;
+    color: var(--ft-danger);
+    font-size: 0.85em;
+  }
+}
+
+.external-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ft-space-3);
+
+  select,
+  input {
+    flex: 1 1 180px;
+    min-width: 0;
+    background: var(--ft-surface-sunken);
+    border: 1px solid var(--ft-border-strong);
+    border-radius: var(--ft-radius-sm);
+    padding: 10px 12px;
+    color: var(--ft-text);
+    font-size: 0.9em;
+    font-family: inherit;
+  }
+}
+
+.external-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--ft-radius-sm);
+}

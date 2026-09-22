@@ -3,6 +3,7 @@ import { AlertController } from '@ionic/angular';
 import { ExerciseService } from '../core/services/exercise.service';
 import { AuthService } from '../core/services/auth.service';
 import { DifficultyLevel, Exercise, MuscleGroup } from '../core/models/exercise.model';
+import { ExternalExercise, ExternalExerciseCategory } from '../core/models/external-exercise.model';
 import { withCd } from '../core/utils/with-cd';
 
 @Component({
@@ -28,6 +29,24 @@ export class ExercisesPage implements OnInit {
     difficulty_level: DifficultyLevel | '';
     description: string;
   } = { name: '', muscle_group_id: null, equipment: '', difficulty_level: '', description: '' };
+
+  showExternal = false;
+  externalCategories: ExternalExerciseCategory[] = [];
+  externalResults: ExternalExercise[] = [];
+  externalCategoryId: number | null = null;
+  externalQuery = '';
+  externalLoading = false;
+  externalError = '';
+
+  /** Categorías de wger.de (en inglés) -> grupo muscular propio (ver docs/api-externa-ejercicios.md). */
+  private readonly categoryToMuscleGroup: Record<string, string> = {
+    Chest: 'Pecho',
+    Back: 'Espalda',
+    Shoulders: 'Hombros',
+    Legs: 'Piernas',
+    Abs: 'Abdomen',
+    Cardio: 'Cardio',
+  };
 
   constructor(
     private exerciseService: ExerciseService,
@@ -114,5 +133,53 @@ export class ExercisesPage implements OnInit {
 
   isOwn(exercise: Exercise): boolean {
     return exercise.user_id !== null && exercise.user_id === this.currentUserId;
+  }
+
+  toggleExternal(): void {
+    this.showExternal = !this.showExternal;
+    if (this.showExternal && this.externalCategories.length === 0) {
+      this.exerciseService.externalCategories().subscribe({
+        next: withCd(this.cdr, (res) => (this.externalCategories = res.categories)),
+        error: withCd(this.cdr, (err) => (this.externalError = err.error?.message || 'No se pudo cargar el catálogo externo')),
+      });
+    }
+  }
+
+  searchExternal(): void {
+    this.externalLoading = true;
+    this.externalError = '';
+    this.exerciseService
+      .searchExternal({ category: this.externalCategoryId ?? undefined, search: this.externalQuery.trim() || undefined })
+      .subscribe({
+        next: withCd(this.cdr, (res) => {
+          this.externalLoading = false;
+          this.externalResults = res.exercises;
+        }),
+        error: withCd(this.cdr, (err) => {
+          this.externalLoading = false;
+          this.externalError = err.error?.message || 'No se pudo consultar la API externa';
+        }),
+      });
+  }
+
+  importFromExternal(ext: ExternalExercise): void {
+    this.showForm = true;
+    this.showExternal = false;
+    this.formError = '';
+    this.newExercise = {
+      name: ext.name,
+      muscle_group_id: this.guessMuscleGroupId(ext.category),
+      equipment: ext.equipment.join(', '),
+      difficulty_level: '',
+      description: ext.description,
+    };
+  }
+
+  private guessMuscleGroupId(category: string | null): number | null {
+    const targetName = category ? this.categoryToMuscleGroup[category] : undefined;
+    if (!targetName) {
+      return null;
+    }
+    return this.muscleGroups.find((mg) => mg.name === targetName)?.id ?? null;
   }
 }
