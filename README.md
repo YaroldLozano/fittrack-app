@@ -63,6 +63,7 @@ La app tiene más de 20 vistas; las más relevantes:
 | Rutinas | `/app/routines` | Crear/editar rutinas por día, o partir de una **plantilla predeterminada** |
 | Entrenar | `/app/workout` | Ejecutar el entrenamiento del día, registrar series |
 | **Ajustar con IA** | `/app/ai-coach` | Pedirle a la IA que arme/ajuste el entrenamiento del día |
+| **Notas** | `/app/notes` | Notas privadas guardadas en el dispositivo (persistencia local, ver [`docs/persistencia.md`](docs/persistencia.md)) |
 | Progreso / Historial | `/app/progress`, `/app/history` | Estadísticas, gráficos y entrenamientos pasados |
 | Perfil / Social | `/app/profile`, `/app/feed`, `/app/ranking` | Perfil, feed social, amigos, ranking, retos |
 
@@ -78,6 +79,10 @@ Ver capturas de estas y otras vistas en [`screenshots/`](screenshots/).
   **frontend**: las interfaces TypeScript de cada entidad, los servicios
   Angular que implementan el acceso a datos (capa DAO sobre la API REST),
   su cobertura de operaciones CRUD, y un diagrama de clases.
+- [`docs/persistencia.md`](docs/persistencia.md) — persistencia **local
+  al dispositivo** (Ionic Storage) para datos que no pasan por el
+  backend: notas de entrenamiento, con alta/consulta/modificación/
+  eliminación que sobreviven a cerrar y reabrir la app.
 
 ## Capturas de ejecución
 
@@ -104,3 +109,6 @@ verificar la vista móvil real de la app.
 - [`docs/prompts-ia-modelado.md`](docs/prompts-ia-modelado.md) — mismo tipo
   de explicación, específica para el modelado de entidades y la capa de
   acceso a datos (servicios Angular).
+- [`docs/prompts-ia-persistencia.md`](docs/prompts-ia-persistencia.md) —
+  mismo tipo de explicación, específica para la persistencia local
+  (Ionic Storage).

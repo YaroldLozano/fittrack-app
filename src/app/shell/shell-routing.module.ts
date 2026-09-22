@@ -12,6 +12,7 @@ const routes: Routes = [
       { path: 'exercises', loadChildren: () => import('../exercises/exercises.module').then((m) => m.ExercisesPageModule) },
       { path: 'workout', loadChildren: () => import('../workout/workout.module').then((m) => m.WorkoutPageModule) },
       { path: 'ai-coach', loadChildren: () => import('../ai-coach/ai-coach.module').then((m) => m.AiCoachPageModule) },
+      { path: 'notes', loadChildren: () => import('../notes/notes.module').then((m) => m.NotesPageModule) },
       { path: 'calendar', loadChildren: () => import('../calendar/calendar.module').then((m) => m.CalendarPageModule) },
       { path: 'progress', loadChildren: () => import('../progress/progress.module').then((m) => m.ProgressPageModule) },
       { path: 'history', loadChildren: () => import('../history/history.module').then((m) => m.HistoryPageModule) },

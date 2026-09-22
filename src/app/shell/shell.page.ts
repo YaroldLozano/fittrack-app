@@ -45,6 +45,12 @@ export class ShellPage implements OnInit {
       ],
     },
     {
+      title: 'Herramientas',
+      links: [
+        { path: '/app/notes', label: 'Notas', icon: 'document-text-outline' },
+      ],
+    },
+    {
       title: 'Social',
       links: [
         { path: '/app/feed', label: 'Feed', icon: 'newspaper-outline' },

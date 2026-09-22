@@ -1,0 +1,34 @@
+<ion-content class="page">
+  <div class="page-header">
+    <h1>Notas</h1>
+    <button class="btn-primary" (click)="showForm ? cancelForm() : newNote()">
+      {{ showForm ? 'Cancelar' : '+ Nueva nota' }}
+    </button>
+  </div>
+
+  <p class="hint">Se guardan en este dispositivo (Ionic Storage) y siguen aquí aunque cierres la app.</p>
+
+  <form class="create-form" *ngIf="showForm" (ngSubmit)="submit()">
+    <input type="text" name="title" [(ngModel)]="title" placeholder="Título (ej. Sensaciones de hoy)" />
+    <textarea name="content" [(ngModel)]="content" placeholder="Contenido (opcional)" rows="4"></textarea>
+    <p class="error" *ngIf="formError">{{ formError }}</p>
+    <button type="submit" class="btn-primary">{{ editingId ? 'Guardar cambios' : 'Crear nota' }}</button>
+  </form>
+
+  <div class="card-list" *ngIf="!isLoading">
+    <div class="item-card" *ngFor="let note of notes">
+      <div class="item-card-header">
+        <h3>{{ note.title }}</h3>
+      </div>
+      <p class="equipment" *ngIf="note.content">{{ note.content }}</p>
+      <p class="equipment">Actualizada: {{ note.updatedAt | date: 'short' }}</p>
+
+      <div class="actions">
+        <button class="btn-secondary" (click)="editNote(note)">Editar</button>
+        <button class="delete-btn" (click)="remove(note)">Eliminar</button>
+      </div>
+    </div>
+
+    <p class="empty" *ngIf="notes.length === 0">No tienes notas todavía. ¡Crea la primera!</p>
+  </div>
+</ion-content>

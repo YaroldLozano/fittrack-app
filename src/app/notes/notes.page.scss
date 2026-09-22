@@ -1,0 +1,11 @@
+.hint {
+  margin: 0 var(--ft-space-5) var(--ft-space-3);
+  font: var(--ft-text-body-sm);
+  color: var(--ft-text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: var(--ft-space-3);
+  margin-top: var(--ft-space-2);
+}
